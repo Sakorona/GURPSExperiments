@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateGURPSOrbits", "GenerateGURPSOrbits\GenerateGURPSOrbits.csproj", "{D7E9B292-910C-4E5B-BBE4-567F27DEAEAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateGURPSPlanet", "GenerateGURPSPlanet\GenerateGURPSPlanet.csproj", "{0D1009BF-804D-4010-A0A6-FD095A21C2D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateSystemOrbits", "GenerateSystemOrbits\GenerateSystemOrbits.csproj", "{3DF458FA-8952-4043-8F25-56A556DAA70A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RollGURPSStar", "RollGURPSStar\RollGURPSStar.csproj", "{F37B8D0A-EAA5-4370-9586-777345969769}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwilightShards.genLibrary", "TwilightShards.genLibrary\TwilightShards.genLibrary.csproj", "{AC8A917E-45FC-4BEF-BBC5-1B2526BCF375}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwilightShards.GURPSUtil", "TwilightShards.GURPSUtil\TwilightShards.GURPSUtil.csproj", "{09283B4A-80B8-4CB7-8836-78708DED8776}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D7E9B292-910C-4E5B-BBE4-567F27DEAEAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7E9B292-910C-4E5B-BBE4-567F27DEAEAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7E9B292-910C-4E5B-BBE4-567F27DEAEAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7E9B292-910C-4E5B-BBE4-567F27DEAEAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D1009BF-804D-4010-A0A6-FD095A21C2D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D1009BF-804D-4010-A0A6-FD095A21C2D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D1009BF-804D-4010-A0A6-FD095A21C2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D1009BF-804D-4010-A0A6-FD095A21C2D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DF458FA-8952-4043-8F25-56A556DAA70A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DF458FA-8952-4043-8F25-56A556DAA70A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DF458FA-8952-4043-8F25-56A556DAA70A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DF458FA-8952-4043-8F25-56A556DAA70A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F37B8D0A-EAA5-4370-9586-777345969769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F37B8D0A-EAA5-4370-9586-777345969769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F37B8D0A-EAA5-4370-9586-777345969769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F37B8D0A-EAA5-4370-9586-777345969769}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC8A917E-45FC-4BEF-BBC5-1B2526BCF375}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC8A917E-45FC-4BEF-BBC5-1B2526BCF375}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC8A917E-45FC-4BEF-BBC5-1B2526BCF375}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC8A917E-45FC-4BEF-BBC5-1B2526BCF375}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09283B4A-80B8-4CB7-8836-78708DED8776}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09283B4A-80B8-4CB7-8836-78708DED8776}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09283B4A-80B8-4CB7-8836-78708DED8776}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09283B4A-80B8-4CB7-8836-78708DED8776}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
