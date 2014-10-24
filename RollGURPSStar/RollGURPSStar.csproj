@@ -94,13 +94,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\TwilightShards.GURPSUtil\TwilightShards.GURPSUtil\TwilightShards.GURPSUtil.csproj">
-      <Project>{09283b4a-80b8-4cb7-8836-78708ded8776}</Project>
-      <Name>TwilightShards.GURPSUtil</Name>
-    </ProjectReference>
-    <ProjectReference Include="B:\Coding Projects\TwilightShards.genLibrary\TwilightShards.genLibrary.csproj">
+    <ProjectReference Include="..\TwilightShards.genLibrary\TwilightShards.genLibrary.csproj">
       <Project>{ac8a917e-45fc-4bef-bbc5-1b2526bcf375}</Project>
       <Name>TwilightShards.genLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TwilightShards.GURPSUtil\TwilightShards.GURPSUtil.csproj">
+      <Project>{09283b4a-80b8-4cb7-8836-78708ded8776}</Project>
+      <Name>TwilightShards.GURPSUtil</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
