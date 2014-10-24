@@ -49,13 +49,13 @@
     <Compile Include="WorldType.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="B:\Coding Projects\TwilightShards.genLibrary\TwilightShards.genLibrary.csproj">
+    <None Include="planet.schema.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TwilightShards.genLibrary\TwilightShards.genLibrary.csproj">
       <Project>{ac8a917e-45fc-4bef-bbc5-1b2526bcf375}</Project>
       <Name>TwilightShards.genLibrary</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="planet.schema.json" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
