@@ -5,6 +5,10 @@
         Title="GURPS Planetary Generation" Height="740" Width="694">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="335*"/>
+            <ColumnDefinition Width="351*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="40" />
@@ -15,50 +19,62 @@
             <RowDefinition Height="40" />
         </Grid.RowDefinitions>
         <Label Content="Star 1 Luminosity:" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0" Margin="5,4,0,0"/>
-        <TextBox x:Name="txtStar1Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,474,0" Grid.Row="0"/>
-        <Label Content="Orbital Distance" Width="150" Height="30" Grid.Row="0" Margin="256,5,280,6" />
-        <TextBox x:Name="txtStar1OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="406,8,221,0" Grid.Row="0"/>
-        <Label Content="Star 1 is the Parent Star" Grid.Row="0" Height="30" Margin="498,4,-498,7" />
+        <TextBox x:Name="txtStar1Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,123.333,0" Grid.Row="0"/>
+        <Label Content="Orbital Distance" Width="150" Height="30" Grid.Row="0" Margin="256,5,280,6" Grid.ColumnSpan="2" />
+        <TextBox x:Name="txtStar1OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="70.667,8,221,0" Grid.Row="0" Grid.Column="1"/>
+        <Label Content="Star 1 is the Parent Star" Grid.Row="0" Height="30" Margin="141,4,-476,7" Grid.Column="1" />
 
         <Label Content="Star 2 Luminosity:" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1" Margin="5,4,0,0"/>
-        <TextBox x:Name="txtStar2Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,8,474,0" Grid.Row="1"/>
-        <Label Content="Star 2 Orbital Distance" Width="150" Height="30" Grid.Row="1" Margin="256,4,280,7" />
-        <TextBox x:Name="txtStar2OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="406,10,221,0" Grid.Row="1"/>
-        <Label Content="Primary Star Mass" Height="30" Grid.Row="1" Margin="498,6,43,5" />
+        <TextBox x:Name="txtStar2Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,8,123.333,0" Grid.Row="1"/>
+        <Label Content="Star 2 Orbital Distance" Width="150" Height="30" Grid.Row="1" Margin="256,4,280,7" Grid.ColumnSpan="2" />
+        <TextBox x:Name="txtStar2OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="70.667,10,221,0" Grid.Row="1" Grid.Column="1"/>
+        <Label Content="Primary Star Mass" Height="30" Grid.Row="1" Margin="141,6,65,5" Grid.Column="1" RenderTransformOrigin="0.5,0.5" >
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="0.26"/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="0.329"/>
+                </TransformGroup>
+            </Label.RenderTransform>
+        </Label>
+        <TextBox x:Name="txtPrimaryMass" Text="0" Height="30" Grid.Row="1" Margin="245,8,70,3" Grid.Column="1" />
+        <Label Content="solar mass" Height="30" Grid.Row="1" Grid.Column="1" Margin="281,8,-265,3" />
 
         <Label Content="Star 3 Luminosity:" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="2" Margin="5,5,0,0"/>
-        <TextBox x:Name="txtStar3Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,474,0" Grid.Row="2"/>
-        <Label Content="Star 3 Orbital Distance" Width="150" Height="30" Grid.Row="2" Margin="256,4,280,7" />
-        <TextBox x:Name="txtStar3OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="406,4,221,0" Grid.Row="2"/>
-        <TextBox x:Name="txtPrimaryMass" Text="0" Height="30" Grid.Row="2" Margin="498,6,124,5" />
+        <TextBox x:Name="txtStar3Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,123.333,0" Grid.Row="2"/>
+        <Label Content="Star 3 Orbital Distance" Width="150" Height="30" Grid.Row="2" Margin="256,4,280,7" Grid.ColumnSpan="2" />
+        <TextBox x:Name="txtStar3OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="70.667,4,221,0" Grid.Row="2" Grid.Column="1"/>
+        <Label Content="System Age" Grid.Row="2" Margin="141,5,87,36" Grid.RowSpan="2" Grid.Column="1" />
+        <TextBox x:Name="txtSystemAge" Text="0" Height="30" Grid.Row="2" Margin="245,8,70,3" Grid.Column="1" />
+        <Label Content="GYa" Height="30" Grid.Row="2" Grid.Column="1" Margin="286,8,-270,3" />        
 
         <Label Content="Star 4 Luminosity:" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" Margin="0,5,0,0"/>
-        <TextBox x:Name="txtStar4Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,474,0" Grid.Row="3"/>
-        <Label Content="Star 4 Orbital Distance" Width="150" Height="30" Grid.Row="3" Margin="256,4,280,7" />
-        <TextBox x:Name="txtStar4OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="406,5,221,0" Grid.Row="3"/>
-        <Label Content="System Age" Grid.Row="3" Margin="498,4,65,37" Grid.RowSpan="2" />
-
+        <TextBox x:Name="txtStar4Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,123.333,0" Grid.Row="3"/>
+        <Label Content="Star 4 Orbital Distance" Width="150" Height="30" Grid.Row="3" Margin="256,4,280,7" Grid.ColumnSpan="2" />
+        <TextBox x:Name="txtStar4OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="70.667,5,221,0" Grid.Row="3" Grid.Column="1"/>
+        <CheckBox x:Name="chkGeneateMoons" Content="Generate Moons" Grid.Row="3" Grid.Column="1" Margin="141,10,-125,31" Grid.RowSpan="2"/>
+        
         <Label Content="Star 5 Luminosity:" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="4" Margin="5,4,0,0"/>
-        <TextBox x:Name="txtStar5Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,474,0" Grid.Row="4"/>
-        <Label Content="Star 5 Orbital Distance" Width="150" Height="30" Grid.Row="4" Margin="256,4,280,7" />
-        <TextBox x:Name="txtStar5OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="406,8,221,0" Grid.Row="4"/>
-        <TextBox x:Name="txtSystemAge" Text="0" Height="30" Grid.Row="4" Margin="498,4,132,7" />
+        <TextBox x:Name="txtStar5Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,123.333,0" Grid.Row="4"/>
+        <Label Content="Star 5 Orbital Distance" Width="150" Height="30" Grid.Row="4" Margin="256,4,280,7" Grid.ColumnSpan="2" />
+        <TextBox x:Name="txtStar5OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="70.667,8,221,0" Grid.Row="4" Grid.Column="1"/>
 
-        <Label Content="World Size" Grid.Row="5" />
-        <ComboBox x:Name="cmbWorldSize" Height="30" Margin="82,2,495,9" Grid.Row="5" SelectedIndex="0" />
+        <Label Content="World Size" Grid.Row="5" Grid.ColumnSpan="2" />
+        <ComboBox x:Name="cmbWorldSize" Height="30" Margin="82,2,144.333,9" Grid.Row="5" SelectedIndex="0" />
 
-        <Label Content="World Type" Grid.Row="5" Margin="205,2,-205,-2" />
-        <ComboBox x:Name="cmbWorldType" Width="100" Height="30" Grid.Row="5" Margin="282,2,304,9" SelectedIndex="0" />
+        <Label Content="World Type" Grid.Row="5" Margin="205,2,-205,39" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+        <ComboBox x:Name="cmbWorldType" Width="100" Height="30" Grid.Row="5" Margin="282,2,304,9" SelectedIndex="0" Grid.ColumnSpan="2" />
 
 
-        <Label Content="Parent Mass" Grid.Row="5" Width="100" Margin="387,2,199,-2" />
-        <TextBox x:Name="txtParentMass" Text="0" Grid.Row="5" Margin="467,6,170,14" />
-        <Label Content="Parent Type" Grid.Row="5" Width="100" Margin="521,2,65,-2" />
-        <ComboBox x:Name="cmbParenType" Height="30" SelectedIndex="0" Grid.Row="5" Margin="606,2,0,9" />
+        <Label Content="Parent Mass" Grid.Row="5" Width="100" Margin="51.667,2,199,39" Grid.Column="1" Grid.RowSpan="2" />
+        <TextBox x:Name="txtParentMass" Text="0" Grid.Row="5" Margin="131.667,6,170,14" Grid.Column="1" />
+        <Label Content="Parent Type" Grid.Row="5" Width="100" Margin="185.667,2,65,39" Grid.Column="1" Grid.RowSpan="2" />
+        <ComboBox x:Name="cmbParenType" Height="30" SelectedIndex="0" Grid.Row="5" Margin="270.667,2,0,9" Grid.Column="1" />
 
-        <Button x:Name="btnGenerate" Grid.Row="6" Click="btnGenerate_Click">Generate the Planet!</Button>
+        <Button x:Name="btnGenerate" Grid.Row="6" Click="btnGenerate_Click" Grid.ColumnSpan="2">Generate the Planet!</Button>
 
-        <TextBox x:Name="txtResults" Grid.Row="6" Margin="5,46,-5,-422">
+        <TextBox x:Name="txtResults" Grid.Row="6" Margin="5,46,-5,-422" Grid.ColumnSpan="2">
 
         </TextBox>
     </Grid>

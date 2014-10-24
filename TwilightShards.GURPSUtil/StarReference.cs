@@ -685,11 +685,11 @@ namespace TwilightShards.GURPSUtil
             return Math.Pow(blackTemp, .25);
         }
 
-        public static WorldType getWorldType(Dice ourDice, double blackbody, string worldSize, string worldType, string parentType, double primaryMass, double systemAge)
+        public static WorldType getWorldType(Dice ourDice, double blackbody, WorldSize worldSize, string parentType, double primaryMass, double systemAge)
         {
             //apply the rule that the diff is split.
             //Now for tiny worlds.
-            if (worldSize == "Tiny")
+            if (worldSize == WorldSize.Tiny)
             {
                 if (blackbody >= 140.5)
                     return WorldType.Rock;
@@ -703,7 +703,7 @@ namespace TwilightShards.GURPSUtil
             }
             
             //Now for small worlds.
-            if (worldSize == "Small")
+            if (worldSize == WorldSize.Small)
             {
                 if (blackbody < 80.5)
                     return WorldType.Hadean;
@@ -714,7 +714,7 @@ namespace TwilightShards.GURPSUtil
             }
 
             //now for standard worlds
-            if (worldSize == "Standard")
+            if (worldSize == WorldSize.Standard)
             {
                 if (blackbody < 80.5)
                     return WorldType.Hadean;
@@ -748,7 +748,7 @@ namespace TwilightShards.GURPSUtil
                     return WorldType.Chthonian;
             }
 
-            if (worldSize == "Large")
+            if (worldSize == WorldSize.Large)
             {
                 if (blackbody < 150.5)
                     return WorldType.Ice;
@@ -782,5 +782,123 @@ namespace TwilightShards.GURPSUtil
             return WorldType.None;
         }
 
+        public static PlanetType convertPlanetType(string baseVal)
+        {
+            if (baseVal == "Asteroid Belt")
+                return PlanetType.AsteroidBelt;
+            else if (baseVal == "Terrestial Planet")
+                return PlanetType.TerrestialPlanet;
+            else if (baseVal == "Moon")
+                return PlanetType.Moon;
+            else if (baseVal == "Gas Giant Planet")
+                return PlanetType.GasGiantPlanet;
+
+            return PlanetType.None;
+        }
+
+        public static WorldSize convertWorldSize(string baseVal)
+        {
+            if (baseVal == "Tiny")
+                return WorldSize.Tiny;
+            else if (baseVal == "Small")
+                return WorldSize.Small;
+            else if (baseVal == "Standard")
+                return WorldSize.Standard;
+            else if (baseVal == "Medium")
+                return WorldSize.Medium;
+            else if (baseVal == "Large")
+                return WorldSize.Large;
+
+            return WorldSize.None;
+        }
+
+        public static int getTerrestialMajorMoons(Dice ourDice, WorldSize planetSize, double primaryDistance)
+        {
+            int mod = -4;
+
+            if (primaryDistance <= 0.5)
+                return 0;
+            if (primaryDistance > .5 && primaryDistance <= .75)
+                mod = mod -3;
+            if (primaryDistance > .75 && primaryDistance <= 1.5)
+                mod = mod - 1;
+
+            if (planetSize == WorldSize.Tiny) mod = mod - 2;
+            if (planetSize == WorldSize.Small) mod = mod - 1;
+            if (planetSize == WorldSize.Large) mod = mod + 1;
+
+            return ourDice.rngGTZero(1,6,mod);
+         }
+
+        public static int getTerrestialMoonlets(Dice ourDice, WorldSize planetSize, double primaryDistance)
+        {
+            int mod = -2;
+
+            if (primaryDistance <= 0.5)
+                return 0;
+            if (primaryDistance > .5 && primaryDistance <= .75)
+                mod = mod - 3;
+            if (primaryDistance > .75 && primaryDistance <= 1.5)
+                mod = mod - 1;
+
+            if (planetSize == WorldSize.Tiny) mod = mod - 2;
+            if (planetSize == WorldSize.Small) mod = mod - 1;
+            if (planetSize == WorldSize.Large) mod = mod + 1;
+
+            return ourDice.rngGTZero(1,6,mod);
+        }
+
+        public static int getGasGiantRingMoons(Dice ourDice, double primaryDistance)
+        {
+            int mod = 0;
+            if (primaryDistance <= .1)
+                mod = -10;
+            else if (primaryDistance > .1 && primaryDistance <= .5)
+                mod = -8;
+            else if (primaryDistance > .5 && primaryDistance <= .75)
+                mod = -6;
+            else if (primaryDistance > .75 && primaryDistance <= 1.5)
+                mod = -3;
+
+            return ourDice.rngGTZero(2, 6, mod);
+        }
+
+        public static int getGasGiantCapturedMoons(Dice ourDice, double primaryDistance)
+        {
+            int mod = 0;
+
+            if (primaryDistance <= .1)
+                return 0;
+            else if (primaryDistance > .1 && primaryDistance <= .5)
+                mod = -5;
+            else if (primaryDistance > .5 && primaryDistance <= .75)
+                mod = -4;
+            else if (primaryDistance > .75 && primaryDistance <= 1.5)
+                mod = -1;
+
+            return ourDice.rngGTZero(1, 6, mod);
+        }
+
+        public static int getGasGiantMajorMoons(Dice ourDice, double primaryDistance)
+        {
+            int mod = 0;
+
+            if (primaryDistance <= .5)
+                return 0;
+            else if (primaryDistance > .5 && primaryDistance <= .75)
+                mod = -5;
+            else if (primaryDistance > .75 && primaryDistance <= 1.5)
+                mod = -4;
+            else if (primaryDistance > 1.5 && primaryDistance <= 3)
+                mod = mod - 1;
+
+            return ourDice.rngGTZero(1, 6, mod);
+        }
+
+        public static double rollAtmosphere(Dice ourDice)
+        {
+            double variance = .05;
+            return (ourDice.gurpsRoll() / 10.0 + ourDice.rollInRange(-1 * variance, variance));
+        }
     }
 }

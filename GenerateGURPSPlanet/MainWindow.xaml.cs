@@ -58,6 +58,8 @@ namespace GenerateGURPSPlanet
             double star1Lumin, star2Lumin, star3Lumin, star4Lumin, star5Lumin, star1Distance, star2Distance, star3Distance, star4Distance, 
                 star5Distance, parentMass, primaryMass, systemAge;
 
+            Planet currPlanet = new Planet();
+
             if (!(Double.TryParse(txtStar1Luminosity.Text, out star1Lumin)))
                 return;
             if (!(Double.TryParse(txtStar1OrbitalDistance.Text, out star1Distance)))
@@ -85,6 +87,43 @@ namespace GenerateGURPSPlanet
             if (!(Double.TryParse(txtSystemAge.Text, out systemAge)))
                 return;
 
+            //get values from interface
+            currPlanet.worldSize = StarReference.convertWorldSize(cmbWorldSize.SelectedItem.ToString());
+            currPlanet.planetType = StarReference.convertPlanetType(cmbWorldType.SelectedItem.ToString());
+            string selectedParentType = cmbParenType.SelectedItem.ToString();
+            
+            bool genMoons = false;
+            if (chkGeneateMoons.IsChecked == true)
+                genMoons = true;
+
+            //populate stars.
+            currPlanet.parentStars.Add(new StarRecord(0, true, star1Distance));
+            if (star2Distance != 0)
+                currPlanet.parentStars.Add(new StarRecord(1, false, star2Distance));
+            if (star3Distance != 0)
+                currPlanet.parentStars.Add(new StarRecord(2, false, star3Distance));
+            if (star4Distance != 0)
+                currPlanet.parentStars.Add(new StarRecord(3, false, star4Distance));
+            if (star5Distance != 0)
+                currPlanet.parentStars.Add(new StarRecord(4, false, star5Distance));
+
+            //We need to roll moons. 
+            if (currPlanet.planetType == PlanetType.TerrestialPlanet && genMoons)
+            {
+                currPlanet.majorMoons = StarReference.getTerrestialMajorMoons(ourDice, currPlanet.worldSize, star1Distance);
+                if (currPlanet.majorMoons == 0)
+                    currPlanet.moonlets = StarReference.getTerrestialMoonlets(ourDice, currPlanet.worldSize, star1Distance);
+                else
+                    currPlanet.moonlets = 0;
+            }
+
+            if (currPlanet.planetType == PlanetType.GasGiantPlanet && genMoons) 
+            {
+                currPlanet.ringMoons = StarReference.getGasGiantRingMoons(ourDice, star1Distance);
+                currPlanet.majorMoons = StarReference.getGasGiantMajorMoons(ourDice, star1Distance);
+                currPlanet.capturedMoons = StarReference.getGasGiantCapturedMoons(ourDice, star1Distance);
+            }
+
             //calc blackbody.
             double[] blackbody = new double[5];
             if (star1Distance != 0)
@@ -97,23 +136,36 @@ namespace GenerateGURPSPlanet
                 blackbody[3] = StarReference.getBlackBodyTemp(star4Lumin, star4Distance);
             if (star5Distance != 0)
                 blackbody[4] = StarReference.getBlackBodyTemp(star5Lumin, star5Distance);
+
+             currPlanet.blackbodyTemp = StarReference.getBlackbodyTempTotal(blackbody);
             
-            double currBlackBody = StarReference.getBlackbodyTempTotal(blackbody);
 
             //now that we have the blackbody, let's get the world type.
-            string selectedWorldSize = cmbWorldSize.SelectedItem.ToString();
-            string selectedWorldType = cmbWorldType.SelectedItem.ToString();
-            string selectedParentType = cmbParenType.SelectedItem.ToString();
-
-            WorldType ourType;
-            if (selectedWorldType != "Gas Giant")
-                ourType = StarReference.getWorldType(ourDice, currBlackBody, selectedWorldSize, selectedWorldType,
-                                                               selectedParentType, primaryMass, systemAge);
+            if (currPlanet.planetType == PlanetType.TerrestialPlanet || currPlanet.planetType == PlanetType.Moon)
+                currPlanet.biomeType = StarReference.getWorldType(ourDice, currPlanet.blackbodyTemp, currPlanet.worldSize, selectedParentType, primaryMass, systemAge);
+            else if (currPlanet.planetType == PlanetType.GasGiantPlanet) 
+                currPlanet.biomeType = WorldType.GasGiant;
             else
-                ourType = WorldType.GasGiant;
+                currPlanet.biomeType = WorldType.None;
 
             //WorldType determined. Now to the next step: Atmosphere.
-            
+            if (currPlanet.planetType == PlanetType.TerrestialPlanet || currPlanet.planetType == PlanetType.Moon)
+            {
+                if (currPlanet.worldSize == WorldSize.Small && currPlanet.biomeType == WorldType.Ice)
+                {
+                    currPlanet.atmoMass = StarReference.rollAtmosphere(ourDice);
+                    currPlanet.AddAtmosphericCondition(AtmosphericConditions.Suffocating);
+                    if (ourDice.rollUnderGurps(15))
+                        currPlanet.AddAtmosphericCondition(AtmosphericConditions.MildlyToxic);
+                    else
+                        currPlanet.AddAtmosphericCondition(AtmosphericConditions.HighlyToxic);
+
+                    //set composition
+                    currPlanet.atmoComposition = "Primarily Nitrogen and Methane, with components of Argon, and some trace ammonia and carbon dioxide.";
+                }
+            }
+   
+            //and now we format the output! :D :D :D 
         }
     }
 }

@@ -1,0 +1,164 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  
+    "definitions": {
+    "star": {
+      "type": "object",
+      "properties": {
+         "starIdent": {
+              "type": "integer"
+            },
+            "isPrimary": {
+              "type": "boolean"
+            },
+            "distance": {
+              "type": "number"
+            }
+      },
+      "required": ["starIdent","isPrimary","distance"]
+    }
+    },
+  
+  "type": "object",
+  "properties": {
+    "planetName": {
+      "type": "string"
+    },
+    "planetType": {
+      "type": "string",
+      "enum": ["Moon", "Asteroid Belt", "Terrestial Planet", "Gas Giant Planet"]
+    },
+    "worldSize": {
+      "type": "string",
+      "enum": ["Tiny", "Small", "Standard", "Medium", "Large"]
+    },
+    "parentStars": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/stars" },
+      "minItems": 1,
+      "maxItems": 5,
+      "additionalProperties": false
+      },
+    "majorMoons": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 12
+    },
+    "moonlets": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 12
+    },
+    "ringMoons": {
+      "type": "integer",
+	  "minimum": 0,
+      "maximum": 12
+    },
+    "capturedMoons": {
+      "type": "integer",
+	    "minimum": 0,
+      "maximum": 12
+    },
+    "blackbodyTemp":{
+	  "type" : "decimal",
+	  "minimum" : 0.0
+    },
+    "worldType": {
+      "type": "string",
+      "enum": [ "None", "GasGiant", "Ice", "Sulfur", "IceSulfur",
+				"Rock", "Hadean", "Ammonia", "Garden", "Ocean",
+				"Greenhouse", "Chthonian"]
+    },
+    "atmosphericPressure": {
+      "type": "number"
+    },
+    "atmosphericMass": {
+      "type": "number"
+    },
+    "atmosphericConditions": {
+      "items": "string",
+      "type": "array",
+      "enum": [ "None", "Chlorine", "Flourine", "SulfurCompounds", "NitrogenCompounds", "OrganicToxins", "LowOxygen", "Pollutants", "HighCarbonDioxide", "HighOxygen",
+			    "InertGases", "MildlyToxic", "Corrosive", "HighlyToxic", "Suffocating", "LethallyToxic", "HeavyMetalPoisoning", "RadioactivePoisoning", "EffectiveOnePressureClassUp",
+				"EffectiveOnePressureClassDown", "FlammabilityOneClassUp"]      
+    },
+    "atmosphericComposition": {
+       "type" : "string"
+    },
+    "hydrographicCoverage": {
+      "type": "number",
+      "minimum" : 0,
+      "maximum" : 1
+    },
+    "worldDiameter": {
+      "type": "integer"
+    },
+    "worldDensity": {
+      "type": "integer"
+    },
+    "worldMass": {
+      "type": "integer"
+    },
+    "worldGravity": {
+      "type": "number"
+    },
+    "resourceValue": {
+      "type": "integer"
+    },
+    "eccentricity": {
+      "type": "number",
+	  "minimum" : 0,
+	  "maximum" : 1,
+	  "exclusiveMaximum": true	  
+    },
+    "orbitalPeriod": {
+      "type": "number"
+    },
+    "moonOrbitalLength": {
+       "type": "number"
+    },
+    "axialTilt": {
+      "type": "integer",
+      "minimum" : 0,
+	  "maximum" : 90
+    },
+    "dayLength": {
+      "type": "integer"
+    },
+    "geologicActivity": {
+      "type": "string",
+      "enum" : ["None","Light","Moderate","Heavy","Extreme"]
+    },
+    "volcanicActivity": {
+      "type": "string",
+      "enum" : ["None","Light","Moderate","Heavy","Extreme"]
+    }
+  },
+  "required": [
+    "planetName",
+    "planetType",
+    "worldSize",
+    "parentStars",
+    "majorMoons",
+    "moonlets",
+    "ringMoons",
+    "capturedMoons",
+    "worldType",
+    "atmosphericPressure",
+    "atmosphericMass",
+    "atmosphericConditions",
+    "hydrographicCoverage",
+    "worldDiameter",
+    "worldDensity",
+    "worldMass",
+    "worldGravity",
+    "resourceValue",
+    "eccentricity",
+    "orbitalPeriod",
+    "moonOrbitalLength",
+    "axialTilt",
+    "dayLength",
+    "geologicActivity",
+    "volcanicActivity"
+  ]
+}
