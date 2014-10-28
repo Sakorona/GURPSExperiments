@@ -71,15 +71,6 @@ namespace TwilightShards.genLibrary
         }
 
         /// <summary>
-        /// The default gurps roll
-        /// </summary>
-        /// <returns>A number between 3 and 18</returns>
-        public int gurpsRoll()
-        {
-            return this.rng(3,6);
-        }
-
-        /// <summary>
         /// This function will roll a dice but with a capped mod.
         /// </summary>
         /// <param name="cap">The capped mod</param>
@@ -107,7 +98,7 @@ namespace TwilightShards.genLibrary
         /// </summary>
         /// <param name="mod">The modifier</param>
         /// <returns>A number between 3 and 18 adjusted by the modifier</returns>
-        public int gurpsRoll(int mod)
+        public virtual int gurpsRoll(int mod = 0)
         {
             return this.rng(3, 6, mod);
         }

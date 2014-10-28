@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwilightShards.genLibrary",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwilightShards.GURPSUtil", "TwilightShards.GURPSUtil\TwilightShards.GURPSUtil.csproj", "{09283B4A-80B8-4CB7-8836-78708DED8776}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GURPSUtilTestProject", "GURPSUtilTestProject\GURPSUtilTestProject.csproj", "{A9EB7478-A391-4F1B-A8E6-5F5FD3CA3FC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{09283B4A-80B8-4CB7-8836-78708DED8776}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09283B4A-80B8-4CB7-8836-78708DED8776}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09283B4A-80B8-4CB7-8836-78708DED8776}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9EB7478-A391-4F1B-A8E6-5F5FD3CA3FC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9EB7478-A391-4F1B-A8E6-5F5FD3CA3FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9EB7478-A391-4F1B-A8E6-5F5FD3CA3FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9EB7478-A391-4F1B-A8E6-5F5FD3CA3FC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

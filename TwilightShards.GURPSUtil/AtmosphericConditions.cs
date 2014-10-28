@@ -28,6 +28,8 @@ namespace TwilightShards.GURPSUtil
         RadioactivePoisoning,
         EffectiveOnePressureClassUp,
         EffectiveOnePressureClassDown,
-        FlammabilityOneClassUp
+        FlammabilityOneClassUp,
+        LocallyLethallyToxic,
+        LocallyHighlyToxic
     }
 }

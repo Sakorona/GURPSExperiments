@@ -35,7 +35,12 @@ namespace TwilightShards.GURPSUtil
         public double atmoPressure { get; set; }
         public double atmoMass { get; set; }
         private List<AtmosphericConditions> atmoConditions { get; set; }
+
+        /// <summary>
+        /// This is the hydrographic coverage of the world, expressed as a percentage [0-1]
+        /// </summary>
         public double hydroCoverage { get; set; }
+        public HydroCoverageType volatileType { get; set; }
         public double worldDiameter { get; set; }
         public double worldDensity { get; set; }
         public double worldMass { get; set; }

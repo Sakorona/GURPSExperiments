@@ -65,9 +65,8 @@
     },
     "worldType": {
       "type": "string",
-      "enum": [ "None", "GasGiant", "Ice", "Sulfur", "IceSulfur",
-				"Rock", "Hadean", "Ammonia", "Garden", "Ocean",
-				"Greenhouse", "Chthonian"]
+      "enum": [ "None", "GasGiant", "Ice", "Sulfur", "IceSulfur", "Rock", "Hadean", "Ammonia", "Garden", 
+				"Ocean", "Greenhouse", "DryGreenhouse", "WetGreenhouse", "Chthonian"]
     },
     "atmosphericPressure": {
       "type": "number"
@@ -78,9 +77,11 @@
     "atmosphericConditions": {
       "items": "string",
       "type": "array",
-      "enum": [ "None", "Chlorine", "Flourine", "SulfurCompounds", "NitrogenCompounds", "OrganicToxins", "LowOxygen", "Pollutants", "HighCarbonDioxide", "HighOxygen",
-			    "InertGases", "MildlyToxic", "Corrosive", "HighlyToxic", "Suffocating", "LethallyToxic", "HeavyMetalPoisoning", "RadioactivePoisoning", "EffectiveOnePressureClassUp",
-				"EffectiveOnePressureClassDown", "FlammabilityOneClassUp"]      
+      "enum": [ "None", "Chlorine", "Flourine", "SulfurCompounds", "NitrogenCompounds", "OrganicToxins", 
+				"LowOxygen", "Pollutants", "HighCarbonDioxide", "HighOxygen", "InertGases", "MildlyToxic", 
+				"Corrosive", "HighlyToxic", "Suffocating", "LethallyToxic", "HeavyMetalPoisoning",
+			    "RadioactivePoisoning", "EffectiveOnePressureClassUp", "EffectiveOnePressureClassDown",
+				"FlammabilityOneClassUp","LocallyLethallyToxic","LocallyHighlyToxic"]      
     },
     "atmosphericComposition": {
        "type" : "string"
@@ -90,6 +91,10 @@
       "minimum" : 0,
       "maximum" : 1
     },
+	"volatileType": {
+	 "type": "string",
+	 "enum": ["None","WaterIces","AmmoniaEutectic","Hydrocarbons"]
+	},
     "worldDiameter": {
       "type": "integer"
     },

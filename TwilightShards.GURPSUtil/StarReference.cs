@@ -107,6 +107,18 @@ namespace TwilightShards.GURPSUtil
             return (mass/100.0);
         }
 
+        public static int getNumberOfStars(Dice ourDice, int mod = 0)
+        {
+            int roll = ourDice.gurpsRoll() + mod;
+            int numStars = (int)(Math.Floor((roll - 1.0) / 5.0));
+                
+            //fix a few possible logic bugs.
+            if (numStars < 1) numStars = 1;
+            else if (numStars > 3) numStars = 3;
+
+            return numStars;           
+        }
+
         public static double genSystemAge(Dice ourDice)
         {
             //get first roll
@@ -899,6 +911,86 @@ namespace TwilightShards.GURPSUtil
         {
             double variance = .05;
             return (ourDice.gurpsRoll() / 10.0 + ourDice.rollInRange(-1 * variance, variance));
+        }
+
+       
+
+        public static void addMarginalConditions(Planet curr, Dice ourDice)
+        {
+            int roll = ourDice.gurpsRoll();
+            if (roll == 3 || roll == 4)
+            {
+                if (ourDice.dblProb() < .99)
+                {
+                    curr.AddAtmosphericCondition(AtmosphericConditions.Chlorine);
+                    curr.AddAtmosphericCondition(AtmosphericConditions.HighlyToxic);
+                    curr.AddAtmosphericCondition(AtmosphericConditions.LocallyLethallyToxic);
+                }
+                else
+                {
+                    curr.AddAtmosphericCondition(AtmosphericConditions.Flourine);
+                    curr.AddAtmosphericCondition(AtmosphericConditions.HighlyToxic);
+                    curr.AddAtmosphericCondition(AtmosphericConditions.LocallyLethallyToxic);
+                }
+            }
+
+            else if (roll == 5 || roll == 6)
+            {
+                curr.AddAtmosphericCondition(AtmosphericConditions.SulfurCompounds);
+                curr.AddAtmosphericCondition(AtmosphericConditions.MildlyToxic);
+                curr.AddAtmosphericCondition(AtmosphericConditions.LocallyHighlyToxic);
+            }
+
+            else if (roll == 7)
+            {
+                curr.AddAtmosphericCondition(AtmosphericConditions.NitrogenCompounds);
+                curr.AddAtmosphericCondition(AtmosphericConditions.MildlyToxic);
+                curr.AddAtmosphericCondition(AtmosphericConditions.LocallyHighlyToxic);
+            }
+
+            else if (roll == 8 || roll == 9)
+            {
+                curr.AddAtmosphericCondition(AtmosphericConditions.OrganicToxins);
+                if (ourDice.dblProb() < .85)
+                    curr.AddAtmosphericCondition(AtmosphericConditions.MildlyToxic);
+                else
+                    curr.AddAtmosphericCondition(AtmosphericConditions.HighlyToxic);
+            }
+
+            else if (roll == 10 || roll == 11)
+            {
+                curr.AddAtmosphericCondition(AtmosphericConditions.LowOxygen);
+                curr.AddAtmosphericCondition(AtmosphericConditions.EffectiveOnePressureClassDown);
+            }
+
+            else if (roll == 12 || roll == 13)
+            {
+                curr.AddAtmosphericCondition(AtmosphericConditions.Pollutants);
+                if (ourDice.dblProb() > .95)
+                    curr.AddAtmosphericCondition(AtmosphericConditions.HighlyToxic);
+                else
+                    curr.AddAtmosphericCondition(AtmosphericConditions.HighlyToxic);
+            }
+
+            else if (roll == 14)
+            {
+                curr.AddAtmosphericCondition(AtmosphericConditions.HighCarbonDioxide);
+                if (ourDice.dblProb() > .81)
+                    curr.AddAtmosphericCondition(AtmosphericConditions.MildlyToxic);
+            }
+
+            else if (roll == 15 || roll == 16)
+            {
+                curr.AddAtmosphericCondition(AtmosphericConditions.HighOxygen);
+                curr.AddAtmosphericCondition(AtmosphericConditions.EffectiveOnePressureClassUp);
+                if (ourDice.dblProb() > .81){
+                    curr.AddAtmosphericCondition(AtmosphericConditions.FlammabilityOneClassUp);
+                    curr.AddAtmosphericCondition(AtmosphericConditions.MildlyToxic);
+                }
+            }
+
+            else if (roll == 17 || roll == 18)
+                curr.AddAtmosphericCondition(AtmosphericConditions.InertGases);
         }
     }
 }

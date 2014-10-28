@@ -19,6 +19,8 @@ namespace TwilightShards.GURPSUtil
         Garden,
         Ocean,
         Greenhouse,
+        DryGreenhouse,
+        WetGreenhouse,
         Chthonian
     }
 }

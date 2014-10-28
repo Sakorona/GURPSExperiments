@@ -47,14 +47,14 @@
         <TextBox x:Name="txtStar3OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="70.667,4,221,0" Grid.Row="2" Grid.Column="1"/>
         <Label Content="System Age" Grid.Row="2" Margin="141,5,87,36" Grid.RowSpan="2" Grid.Column="1" />
         <TextBox x:Name="txtSystemAge" Text="0" Height="30" Grid.Row="2" Margin="245,8,70,3" Grid.Column="1" />
-        <Label Content="GYa" Height="30" Grid.Row="2" Grid.Column="1" Margin="286,8,-270,3" />        
+        <Label Content="GYa" Height="30" Grid.Row="2" Grid.Column="1" Margin="286,8,-270,3" />
 
         <Label Content="Star 4 Luminosity:" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="3" Margin="0,5,0,0"/>
         <TextBox x:Name="txtStar4Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,123.333,0" Grid.Row="3"/>
         <Label Content="Star 4 Orbital Distance" Width="150" Height="30" Grid.Row="3" Margin="256,4,280,7" Grid.ColumnSpan="2" />
         <TextBox x:Name="txtStar4OrbitalDistance" Text="0" Height="30" VerticalAlignment="Top" Margin="70.667,5,221,0" Grid.Row="3" Grid.Column="1"/>
         <CheckBox x:Name="chkGeneateMoons" Content="Generate Moons" Grid.Row="3" Grid.Column="1" Margin="141,10,-125,31" Grid.RowSpan="2"/>
-        
+
         <Label Content="Star 5 Luminosity:" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="4" Margin="5,4,0,0"/>
         <TextBox x:Name="txtStar5Luminosity" Text="0" Height="30" VerticalAlignment="Top" Margin="155,5,123.333,0" Grid.Row="4"/>
         <Label Content="Star 5 Orbital Distance" Width="150" Height="30" Grid.Row="4" Margin="256,4,280,7" Grid.ColumnSpan="2" />
