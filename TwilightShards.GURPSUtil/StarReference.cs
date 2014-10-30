@@ -207,6 +207,35 @@ namespace TwilightShards.GURPSUtil
         // Star Characteristic Methods
         //*******************************************************************************************
 
+
+        //*******************************************************************************************
+        // Star Description Methods
+        //*******************************************************************************************
+
+        /// <summary>
+        /// This function gets the population from the age
+        /// </summary>
+        /// <param name="age">The system age in years</param>
+        /// <returns>The population</returns>
+        public static string determinePopulationFromAge(double age)
+        {
+            if (age <= 100000000000)
+                return "Extreme Population I";
+            else if (age > 100000000000 && age <= 1900000000000)
+                return "Young Population I";
+            else if (age > 1900000000000 && age <= 5550000000000)
+                return "Intermediate Population I";
+            else if (age > 5550000000000 && age <= 8100000000000)
+                return "Old Population I";
+            else if (age > 8100000000000 && age <= 10100000000000)
+                return "Intermediate Population II";
+            else if (age > 10100000000000 && age <= 13800000000000)
+                return "Extreme Population II";
+
+            return "Young Population III";
+        }
+
+
         public static double getTemperature(Dice ourDice, double starMass, double starAge)
         {
             if (starMass < .1 || starMass > 2)
@@ -229,7 +258,7 @@ namespace TwilightShards.GURPSUtil
                             if (currAge >= starEvolutionTable[i][6] && starEvolutionTable[i][6] != 0) //G-Span check.
                                 return 9000;
                             else //Giant Star Phase
-                                return (ourDice.rng(2,6,-2) * 200) + 3000;
+                                return (ourDice.rng(2, 6, -2) * 200) + 3000;
                         }
                         else
                         {  //Subgiant Phase
@@ -265,11 +294,11 @@ namespace TwilightShards.GURPSUtil
                         {
                             currAge = currAge - starEvolutionTable[i][5];
                             if (currAge >= starEvolutionTable[i][6] && starEvolutionTable[i][6] != 0) //G-Span check.
-                                return 8748.95685 * Math.Pow(starMass, -1 / 3); 
+                                return 8748.95685 * Math.Pow(starMass, -1 / 3);
                         }
                     }
 
-                    return (155000 * Math.Sqrt(starLumin)) / Math.Pow(starTemp,2);
+                    return (155000 * Math.Sqrt(starLumin)) / Math.Pow(starTemp, 2);
                 }
             }
             return 0;

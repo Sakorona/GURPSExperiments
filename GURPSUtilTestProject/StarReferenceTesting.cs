@@ -114,5 +114,20 @@ namespace GURPSUtilTestProject
             Assert.AreEqual(13.8, stellarAge);
         }
 
+        [TestMethod]
+        public void VerifyRandomAge()
+        {
+            string population = StarReference.determinePopulationFromAge(4500000000000);
+
+            Assert.AreEqual("Intermediate Population I", population);
+        }
+
+        [TestMethod]
+        public void VerifyRandomAgeBounds()
+        {
+            string population = StarReference.determinePopulationFromAge(14500000000000);
+
+            Assert.AreEqual("Young Population III", population);
+        }
     }
 }
