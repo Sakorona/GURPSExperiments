@@ -43,6 +43,7 @@
     <Compile Include="GasGiantType.cs" />
     <Compile Include="HydroCoverageType.cs" />
     <Compile Include="Planet.cs" />
+    <Compile Include="PlanetReference.cs" />
     <Compile Include="PlanetType.cs" />
     <Compile Include="StarReference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

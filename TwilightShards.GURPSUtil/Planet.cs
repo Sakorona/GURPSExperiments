@@ -60,9 +60,35 @@ namespace TwilightShards.GURPSUtil
             atmoConditions = new List<AtmosphericConditions>();
         }
 
+        //*******************************************************************************************
+        // Atmospheric Conditions Function
+        //*******************************************************************************************
+
+        /// <summary>
+        /// Adds a condition to the atmospheric condition list
+        /// </summary>
+        /// <param name="item">The condition being added.</param>
         public void AddAtmosphericCondition(AtmosphericConditions item)
         {
             this.atmoConditions.Add(item);
+        }
+
+        /// <summary>
+        /// Checks to see if the planet has a certain atmospheric condition.
+        /// </summary>
+        /// <param name="item">The atmospheric condition</param>
+        /// <returns>True if present, false if not.</returns>
+        public bool ContainsCondition(AtmosphericConditions item)
+        {
+            return this.atmoConditions.Contains(item);
+        }
+        
+        public bool HasNoAtmosphere()
+        {
+            if (this.atmoMass == 0)
+                return true;
+            else
+                return false;
         }
     }
 }

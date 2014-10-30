@@ -235,7 +235,6 @@ namespace TwilightShards.GURPSUtil
             return "Young Population III";
         }
 
-
         public static double getTemperature(Dice ourDice, double starMass, double starAge)
         {
             if (starMass < .1 || starMass > 2)
@@ -1007,8 +1006,6 @@ namespace TwilightShards.GURPSUtil
             double variance = .05;
             return (ourDice.gurpsRoll() / 10.0 + ourDice.rollInRange(-1 * variance, variance));
         }
-
-       
 
         public static void addMarginalConditions(Planet curr, Dice ourDice)
         {

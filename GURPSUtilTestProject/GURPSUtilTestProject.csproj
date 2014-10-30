@@ -50,6 +50,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="PlanetReferenceTesting.cs" />
     <Compile Include="StarReferenceTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
