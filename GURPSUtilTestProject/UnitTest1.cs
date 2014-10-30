@@ -50,5 +50,38 @@ namespace GURPSUtilTestProject
             
             Assert.AreEqual(1, numDice);
         }
+
+        [TestMethod]
+        public void VerifyStellarMassRoll()
+        {
+            int roll1 = 10;
+            int roll2 = 14;
+
+            double starMass = StarReference.rollStellarMass(roll1, roll2);
+
+            Assert.AreEqual(.3, starMass);
+        }
+
+        [TestMethod]
+        public void VerifyStellarMassOneBound()
+        {
+            int roll1 = 1;
+            int roll2 = 14;
+
+            double starMass = StarReference.rollStellarMass(roll1, roll2);
+
+            Assert.AreEqual(0, starMass);
+        }
+
+        [TestMethod]
+        public void VerifyStellarMassBothBounds()
+        {
+            int roll1 = 1;
+            int roll2 = 19;
+
+            double starMass = StarReference.rollStellarMass(roll1, roll2);
+
+            Assert.AreEqual(0, starMass);
+        }
     }
 }

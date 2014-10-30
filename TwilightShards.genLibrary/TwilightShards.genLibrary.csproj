@@ -51,10 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dice\DiceHelper.cs" />
-    <Compile Include="DiceTree\DiceTreeNode.cs" />
-    <Compile Include="DiceTree\DiceTreeLeaf.cs" />
     <Compile Include="Dice\Dice.cs" />
-    <Compile Include="DiceTree\DiceTreeBase.cs" />
+    <Compile Include="Extension Methods\ArrayExtensions.cs" />
     <Compile Include="PermissionChecker.cs" />
     <Compile Include="Settings Container\ValType.cs" />
     <Compile Include="TwilightLogger\TwilightLogger.cs" />

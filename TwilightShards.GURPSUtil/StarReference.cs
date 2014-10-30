@@ -9,13 +9,43 @@ namespace TwilightShards.GURPSUtil
 {
     public static class StarReference
     {
-        public static readonly double WHITE_DWARF_LUMIN = .001;
-        public static readonly double GIANT_STAR_LUMINADJ = 10000; //10000, not 25. :(
-        public static readonly  string WHITE_DWARF_SPECTRA = "D";
+        //*******************************************************************************************
+        // Constants 
+        //*******************************************************************************************
+        
+        /// <summary>
+        /// This represents the luminosity for a star in the white dwarf stage
+        /// </summary>
+        private static readonly double WHITE_DWARF_LUMIN = .001;
+        
+        /// <summary>
+        /// This represents the luminosity multiplier for a giant star
+        /// </summary>
+        private static readonly double GIANT_STAR_LUMINADJ = 10000; //10000, not 25. :(
+        
+        /// <summary>
+        /// The white dwarf spectra class.
+        /// </summary>
+        private static readonly  string WHITE_DWARF_SPECTRA = "D";
 
-        private static DiceTreeNode starMassTable;
+        //*******************************************************************************************
+        // Members
+        //*******************************************************************************************
+        
+        /// <summary>
+        /// The star mass table for creating a star
+        /// </summary>
+        private static double[] starMassTable;
+        
+        /// <summary>
+        /// The star evolution table. Contains all of the various entries.
+        /// </summary>
         private static double[][] starEvolutionTable;
 
+
+        //*******************************************************************************************
+        // Static Initalizer
+        //*******************************************************************************************
         static StarReference()
         {
             #region starEvolutionTable creation
@@ -61,62 +91,91 @@ namespace TwilightShards.GURPSUtil
 
             //init members.
             #region starMassTable Initialization
-            starMassTable = new DiceTreeNode();
-            starMassTable.SetRange(3, 3, DiceTreeBase.Init(3, 200),
-                                DiceTreeBase.Init(11, 190));
-            starMassTable.SetRange(4, 4, DiceTreeBase.Init(3, 180),
-                                DiceTreeBase.Init(9, 170),
-                                DiceTreeBase.Init(12, 160));
-            starMassTable.SetRange(5, 5, DiceTreeBase.Init(3, 150),
-                                DiceTreeBase.Init(8, 145));
-            starMassTable.SetRange(6, 6, DiceTreeBase.Init(3, 130),
-                                DiceTreeBase.Init(8, 125),
-                                DiceTreeBase.Init(10, 120),
-                                DiceTreeBase.Init(11, 115),
-                                DiceTreeBase.Init(13, 110));
-            starMassTable.SetRange(7, 7, DiceTreeBase.Init(3, 105),
-                                DiceTreeBase.Init(8, 100),
-                                DiceTreeBase.Init(10, 95),
-                                DiceTreeBase.Init(11, 90),
-                                DiceTreeBase.Init(13, 85));
-            starMassTable.SetRange(8, 8, DiceTreeBase.Init(3, 80),
-                                DiceTreeBase.Init(8, 75),
-                                DiceTreeBase.Init(10, 70),
-                                DiceTreeBase.Init(11, 65),
-                                DiceTreeBase.Init(13, 60));
-            starMassTable.SetRange(9, 9, DiceTreeBase.Init(3, 55),
-                                DiceTreeBase.Init(9, 50),
-                                DiceTreeBase.Init(12, 45));
-            starMassTable.SetRange(10, 10, DiceTreeBase.Init(3, 40),
-                                DiceTreeBase.Init(9, 35),
-                                DiceTreeBase.Init(12, 30));
-            starMassTable.SetRange(11, 11, DiceTreeBase.Init(3, 25));
-            starMassTable.SetRange(12, 12, DiceTreeBase.Init(3, 20));
-            starMassTable.SetRange(13, 13, DiceTreeBase.Init(3, 15));
-            starMassTable.SetRange(14, 18, DiceTreeBase.Init(3, 10));
+            starMassTable = new double[] { 2.00, 2.00, 2.00, 2.00, 2.00, 2.00, 2.00, 2.00, 1.90, 1.90, 1.90, 1.90, 1.90, 1.90,
+                                           1.90, 1.90, 1.80, 1.80, 1.80, 1.80, 1.80, 1.80, 1.70, 1.70, 1.70, 1.60, 1.60, 1.60,
+                                           1.60, 1.60, 1.60, 1.60, 1.50, 1.50, 1.50, 1.50, 1.50, 1.45, 1.45, 1.45, 1.40, 1.40, 
+                                           1.35, 1.35, 1.35, 1.35, 1.35, 1.35, 1.30, 1.30, 1.30, 1.30, 1.30, 1.25, 1.25, 1.20, 
+                                           1.15, 1.15, 1.10, 1.10, 1.10, 1.10, 1.10, 1.10, 1.05, 1.05, 1.05, 1.05, 1.05, 1.00, 
+                                           1.00, 0.95, 0.90, 0.90, 0.85, 0.85, 0.85, 0.85, 0.85, 0.85, 0.80, 0.80, 0.80, 0.80, 
+                                           0.80, 0.75, 0.75, 0.70, 0.65, 0.65, 0.60, 0.60, 0.60, 0.60, 0.60, 0.60, 0.55, 0.55,
+                                           0.55, 0.55, 0.55, 0.55, 0.50, 0.50, 0.50, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45, 0.45,
+                                           0.40, 0.40, 0.40, 0.40, 0.40, 0.40, 0.35, 0.35, 0.35, 0.30, 0.30, 0.30, 0.30, 0.30,
+                                           0.30, 0.30, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25,
+                                           0.25, 0.25, 0.25, 0.25, 0.20, 0.20, 0.20, 0.20, 0.20, 0.20, 0.20, 0.20, 0.20, 0.20, 
+                                           0.20, 0.20, 0.20, 0.20, 0.20, 0.20, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 
+                                           0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 
+                                           0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 
+                                           0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 
+                                           0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 
+                                           0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 
+                                           0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 0.10, 
+                                           0.10, 0.10, 0.10, 0.10 };
             #endregion
         }
 
-        public static double rollStellarMass(Dice ourDice)
-        {
-            int roll1 = ourDice.gurpsRoll() -3;
-            int roll2 = ourDice.gurpsRoll() -3;
-
-            int mass = starMassTable.Walk<int>(roll1, roll2);
-
-            return (mass/100.0);
-        }
-
+        //*******************************************************************************************
+        // Star Generation Methods
+        //*******************************************************************************************
+        
+        /// <summary>
+        /// This function rolls the number of stars for a system.
+        /// </summary>
+        /// <param name="ourDice">Dice object used for rolling</param>
+        /// <param name="mod">Modifier to the roll.</param>
+        /// <returns>The number of stars</returns>
         public static int getNumberOfStars(Dice ourDice, int mod = 0)
         {
             int roll = ourDice.gurpsRoll() + mod;
             int numStars = (int)(Math.Floor((roll - 1.0) / 5.0));
-                
+
             //fix a few possible logic bugs.
             if (numStars < 1) numStars = 1;
             else if (numStars > 3) numStars = 3;
 
-            return numStars;           
+            return numStars;
+        }
+
+        /// <summary>
+        /// This function rolls for a stellar mass
+        /// </summary>
+        /// <param name="ourDice">The dice object</param>
+        /// <returns>The stellar mass, or 0 if incorrect.</returns>
+        public static double rollStellarMass(Dice ourDice)
+        {
+            int roll1 = ourDice.gurpsRoll(-3);
+            int roll2 = ourDice.gurpsRoll(-3);
+
+            return getMass(roll1, roll2);
+        }
+
+        /// <summary>
+        /// This function rolls for a stellar mass
+        /// </summary>
+        /// <param name="roll1">The first roll</param>
+        /// <param name="roll2">The second roll</param>
+        /// <returns>The stellar mass, or 0 if incorrect.</returns>
+        public static double rollStellarMass(int roll1, int roll2)
+        {
+            roll1 = roll1 -3;
+            roll2 = roll2 - 3;
+
+            return getMass(roll1, roll2);
+        }
+
+        /// <summary>
+        /// This function is the actual access to the Star Mass Table
+        /// </summary>
+        /// <param name="roll1"></param>
+        /// <param name="roll2"></param>
+        /// <returns></returns>
+        private static double getMass(int roll1, int roll2)
+        {
+            int val = ((roll1 * 16) + roll2);
+
+            if (val < 0 || val >= starMassTable.Length)
+                return 0.0;
+            else
+                return starMassTable[val];
         }
 
         public static double genSystemAge(Dice ourDice)
