@@ -8,10 +8,16 @@ namespace GURPSUtilTestProject
     public class FakeDice : Dice
     {
         public int diceRoll;
+        public int rngRoll;
 
         public override int gurpsRoll(int mod)
         {
             return diceRoll + mod;
+        }
+
+        public override int rng(int num, int size, int mod)
+        {
+            return rngRoll + mod;
         }
     }
 
@@ -83,5 +89,30 @@ namespace GURPSUtilTestProject
 
             Assert.AreEqual(0, starMass);
         }
+
+        [TestMethod]
+        public void VerifyStellarAge()
+        {
+            FakeDice ourDice = new FakeDice();
+            ourDice.diceRoll = 9;
+            ourDice.rngRoll = 6;
+
+            double stellarAge = StarReference.genSystemAge(ourDice);
+
+            Assert.AreEqual(5.5,stellarAge);            
+        }
+
+        [TestMethod]
+        public void VerifyStellarAgeOutOfBounds()
+        {
+            FakeDice ourDice = new FakeDice();
+            ourDice.diceRoll = 2;
+            ourDice.rngRoll = 6;
+
+            double stellarAge = StarReference.genSystemAge(ourDice);
+
+            Assert.AreEqual(13.8, stellarAge);
+        }
+
     }
 }

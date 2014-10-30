@@ -164,7 +164,7 @@ namespace TwilightShards.genLibrary
         /// <param name="size">The size of the die</param>
         /// <param name="mod">The modifier to the roll</param>
         /// <returns>A number in the range given by numDsize + mod</returns>
-        public int rng(int num, int size, int mod)
+        public virtual int rng(int num, int size, int mod)
         {
             int total;
             total = this.rng(num, size) + mod;

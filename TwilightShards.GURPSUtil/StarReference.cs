@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
 using TwilightShards.genLibrary;
 
 namespace TwilightShards.GURPSUtil
@@ -178,11 +177,15 @@ namespace TwilightShards.GURPSUtil
                 return starMassTable[val];
         }
 
+        /// <summary>
+        /// This generates the system age randomly.
+        /// </summary>
+        /// <param name="ourDice">Dice object</param>
+        /// <returns>The system age</returns>
         public static double genSystemAge(Dice ourDice)
         {
             //get first roll
-            int roll;
-            roll = ourDice.gurpsRoll();
+            int roll = ourDice.gurpsRoll();
 
             if (roll == 3)
                 return 0.01;
@@ -199,6 +202,10 @@ namespace TwilightShards.GURPSUtil
 
             return 13.8;
         }
+
+        //*******************************************************************************************
+        // Star Characteristic Methods
+        //*******************************************************************************************
 
         public static double getTemperature(Dice ourDice, double starMass, double starAge)
         {
