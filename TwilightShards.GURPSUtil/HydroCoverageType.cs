@@ -11,6 +11,8 @@ namespace TwilightShards.GURPSUtil
        None,
        WaterIces,
        AmmoniaEutectic,
+       GreenhouseOcean,
+       ExtremeGreenhouseOcean,
        Hydrocarbons
     }
 }

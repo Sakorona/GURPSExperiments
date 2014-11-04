@@ -142,18 +142,21 @@ namespace GenerateGURPSPlanet
 
             //now that we have the blackbody, let's get the world type.
             if (currPlanet.planetType == PlanetType.TerrestialPlanet || currPlanet.planetType == PlanetType.Moon)
-                currPlanet.biomeType = StarReference.getWorldType(ourDice, currPlanet.blackbodyTemp, currPlanet.worldSize, selectedParentType, primaryMass, systemAge);
+                currPlanet.biomeType = PlanetReference.GetWorldType(ourDice, currPlanet, selectedParentType, primaryMass, systemAge);
             else if (currPlanet.planetType == PlanetType.GasGiantPlanet) 
                 currPlanet.biomeType = WorldType.GasGiant;
             else
                 currPlanet.biomeType = WorldType.None;
 
-            //WorldType determined. Now to the next step: Atmosphere.
-            PlanetReference.GenerateAtmosphere(ourDice, currPlanet);
+            if (!(currPlanet.IsGasGiant()))
+            {
+                //WorldType determined. Now to the next step: Atmosphere.
+                PlanetReference.GenerateAtmosphere(ourDice, currPlanet);
 
-            //hydrographic coverage
-            PlanetReference.GenerateHydrographicCoverage(ourDice, currPlanet);
-
+                //hydrographic coverage and climate info
+                PlanetReference.GenerateHydrographicCoverage(ourDice, currPlanet);
+                currPlanet.surfaceTemp = PlanetReference.GenerateSurfaceTempFromBlackbody(currPlanet);
+            }
             //and now we format the output! :D :D :D 
         }
     }

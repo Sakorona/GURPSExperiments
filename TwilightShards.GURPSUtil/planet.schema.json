@@ -63,6 +63,10 @@
 	  "type" : "decimal",
 	  "minimum" : 0.0
     },
+	"surfaceTemp":{
+	  "type" : "decimal",
+	  "minimum" : 0.0
+    },
     "worldType": {
       "type": "string",
       "enum": [ "None", "GasGiant", "Ice", "Sulfur", "IceSulfur", "Rock", "Hadean", "Ammonia", "Garden", 

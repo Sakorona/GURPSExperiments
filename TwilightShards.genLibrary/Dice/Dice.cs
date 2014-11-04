@@ -94,16 +94,6 @@ namespace TwilightShards.genLibrary
         }
 
         /// <summary>
-        /// The default gurps roll (with modifiers)
-        /// </summary>
-        /// <param name="mod">The modifier</param>
-        /// <returns>A number between 3 and 18 adjusted by the modifier</returns>
-        public virtual int gurpsRoll(int mod = 0)
-        {
-            return this.rng(3, 6, mod);
-        }
-
-        /// <summary>
         /// The base die - rolls from 1 to the size parameter
         /// </summary>
         /// <param name="size">The size (of the metaphorical die)</param>
@@ -168,6 +158,38 @@ namespace TwilightShards.genLibrary
         {
             int total;
             total = this.rng(num, size) + mod;
+            return total;
+        }
+
+        /// <summary>
+        /// This function takes a dice roll, and then mulitplies it by a multiplier.
+        /// </summary>
+        /// <param name="num">Number of die</param>
+        /// <param name="size">The size of the die</param>
+        /// <param name="mod">The modifier to the roll</param>
+        /// <param name="multiplier">The mulitplier of the roll</param>
+        /// <returns>A number in the range, multiplied by the given number</returns>
+        public virtual double MultiplyRNG(int num, int size, int mod, double multiplier)
+        {
+            double total;
+            total = (this.rng(num, size) + mod) * multiplier;
+
+            return total;
+        }
+
+        /// <summary>
+        /// This function takes a dice roll, and then mulitplies it by a multiplier.
+        /// </summary>
+        /// <param name="num">Number of die</param>
+        /// <param name="size">The size of the die</param>
+        /// <param name="mod">The modifier to the roll</param>
+        /// <param name="multiplier">The mulitplier of the roll</param>
+        /// <returns>A number in the range, multiplied by the given number</returns>
+        public virtual int MultiplyRNG(int num, int size, int mod, int multiplier)
+        {
+            int total;
+            total = (this.rng(num, size) + mod) * multiplier;
+
             return total;
         }
 
@@ -281,7 +303,9 @@ namespace TwilightShards.genLibrary
             else return false;
         }
 
-        //GURPS Specific functions
+        //*******************************************************************************************
+        // GURPS Specific Functions
+        //*******************************************************************************************
 
         /// <summary>
         /// This function is designed for roll under in GURPS. It returns true if less or equal to the target
@@ -295,6 +319,85 @@ namespace TwilightShards.genLibrary
                 return true;
             else
                 return false;
+        }
+
+        /// <summary>
+        /// The default gurps roll (with modifiers). Alias function.
+        /// </summary>
+        /// <param name="mod">The modifier</param>
+        /// <returns>A number between 3 and 18 adjusted by the modifier</returns>
+        public virtual int gurpsRoll(int mod = 0)
+        {
+            return this.rng(3, 6, mod);
+        }
+
+        public virtual double gurpsRollMultiplied(double multiplier, int mod = 0)
+        {
+            return this.MultiplyRNG(3, 6, mod, multiplier);
+        }
+
+        public virtual int gurpsRollMultiplied(int multiplier, int mod = 0)
+        {
+            return this.MultiplyRNG(3, 6, mod, multiplier);
+        }
+
+        //*******************************************************************************************
+        // General Methods
+        //*******************************************************************************************
+
+        /// <summary>
+        /// This function will return a varied result from a base value. If exclusive is specified, it will not include the ends
+        /// </summary>
+        /// <param name="variance">The variance</param>
+        /// <param name="baseValue">The base value</param>
+        /// <param name="exclusive">Whether or not this excludes the end (default: false)</param>
+        /// <returns>A varied value</returns>
+        public double VaryResult(double variance, double baseValue, bool exclusive = false)
+        {
+            double val;
+
+            if (!exclusive)
+                return this.rollRange(baseValue - variance, baseValue + variance);
+            else{
+                do{
+                   val = this.rollRange(baseValue - variance, baseValue + variance);
+                } while (val == baseValue - variance || val == baseValue + variance);
+                return val;
+            }
+        }
+
+        /// <summary>
+        /// This function will return a varied result from a base value. Will not be more than max. If exclusive is specified, it will not include the ends
+        /// </summary>
+        /// <param name="variance">The variance</param>
+        /// <param name="baseValue">The base value</param>
+        /// <param name="max">The maximum possible value</param>
+        /// <param name="exclusive">Whether or not this excludes the end (default: false)</param>
+        /// <returns>A varied value</returns>
+        public double VaryResultMax(double variance, double baseValue, double max, bool exclusive = false)
+        {
+            double val = VaryResult(variance, baseValue, exclusive);
+            if (val > max)
+                return max;
+            else
+                return val;
+        }
+
+        /// <summary>
+        /// This function will return a varied result from a base value. Will not be less than min. If exclusive is specified, it will not include the ends.
+        /// </summary>
+        /// <param name="variance">The variance</param>
+        /// <param name="baseValue">The base value</param>
+        /// <param name="min">The minimum possible value</param>
+        /// <param name="exclusive">Whether or not this excludes the end (default: false)</param>
+        /// <returns>A varied value</returns>
+        public double VaryResultMin(double variance, double baseValue, double min, bool exclusive = false)
+        {
+            double val = VaryResult(variance, baseValue, exclusive);
+            if (val < min)
+                return min;
+            else
+                return val;
         }
     }
 }
