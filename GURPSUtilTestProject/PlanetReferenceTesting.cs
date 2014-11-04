@@ -39,5 +39,34 @@ namespace GURPSUtilTestProject
 
             Assert.AreEqual(true, testPlanet.HasNoAtmosphere());
         }
+
+        [TestMethod]
+        public void GenerateProperGreenhouseBiomeType()
+        {
+            Planet testPlanet = new Planet();
+            testPlanet.biomeType = WorldType.Greenhouse;
+            testPlanet.worldSize = WorldSize.Standard;
+            testPlanet.planetType = PlanetType.TerrestialPlanet;
+
+            PlanetReference.GenerateHydrographicCoverage(new Dice(), testPlanet);
+
+            Assert.AreNotEqual(testPlanet.biomeType, WorldType.Greenhouse);
+        }
+
+        [TestMethod]
+        public void GenerateGreenhouseProperly()
+        {
+            Planet testPlanet = new Planet();
+            testPlanet.biomeType = WorldType.Greenhouse;
+            testPlanet.worldSize = WorldSize.Standard;
+            testPlanet.planetType = PlanetType.TerrestialPlanet;
+
+            PlanetReference.GenerateHydrographicCoverage(new Dice(), testPlanet);
+
+            if (testPlanet.biomeType == WorldType.DryGreenhouse)
+                Assert.AreEqual(testPlanet.hydroCoverage, 0);
+            else
+                Assert.AreNotEqual(testPlanet.hydroCoverage, 0);
+        }
     }
 }
