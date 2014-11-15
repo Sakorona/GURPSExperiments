@@ -30,6 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,19 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AtmosphericConditions.cs" />
+    <Compile Include="Atmosphere Classes\AtmoComp.cs" />
+    <Compile Include="Atmosphere Classes\AtmoCompRecord.cs" />
+    <Compile Include="Atmosphere Classes\AtmosphericConditions.cs" />
+    <Compile Include="Atmosphere Classes\ElemAmount.cs" />
     <Compile Include="GasGiantType.cs" />
     <Compile Include="HydroCoverageType.cs" />
+    <Compile Include="MoonType.cs" />
     <Compile Include="Planet.cs" />
     <Compile Include="PlanetReference.cs" />
     <Compile Include="PlanetType.cs" />
+    <Compile Include="Atmosphere Classes\PressureCategory.cs" />
     <Compile Include="StarReference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WorldSize.cs" />
     <Compile Include="WorldType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="planet.schema.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TwilightShards.genLibrary\TwilightShards.genLibrary.csproj">

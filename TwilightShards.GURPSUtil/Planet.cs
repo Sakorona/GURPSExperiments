@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using TwilightShards.genLibrary;
+
 namespace TwilightShards.GURPSUtil
 {
     public struct StarRecord{
@@ -25,14 +27,20 @@ namespace TwilightShards.GURPSUtil
         public PlanetType planetType { get; set; }
         public WorldSize worldSize { get; set; }
         public List<StarRecord> parentStars { get; set; }
-        public int majorMoons { get; set; }
-        public int moonlets { get; set; }
-        public int ringMoons { get; set; }
-        public int capturedMoons { get; set; }
+
+        /// <summary>
+        /// This contains the moons of the planet. 
+        /// </summary>
+        public Dictionary<MoonType, double> PlanetaryMoons { get; set;}
         public double blackbodyTemp { get; set; }
         public double surfaceTemp { get; set; }
         public WorldType biomeType { get; set; }
-        public string atmoComposition { get; set; }
+
+        /// <summary>
+        /// This is the description of the atmosphere.
+        /// </summary>
+        private AtmoComp atmoBreakdown { get; set; }
+
         public double atmoPressure { get; set; }
         public double atmoMass { get; set; }
         private List<AtmosphericConditions> atmoConditions { get; set; }
@@ -57,8 +65,10 @@ namespace TwilightShards.GURPSUtil
 
         public Planet()
         {
+            atmoBreakdown = new AtmoComp();
             parentStars = new List<StarRecord>();
             atmoConditions = new List<AtmosphericConditions>();
+            PlanetaryMoons = new Dictionary<MoonType, double>();
         }
 
         //*******************************************************************************************
@@ -99,6 +109,16 @@ namespace TwilightShards.GURPSUtil
         //*******************************************************************************************
         // Planetary Helper Functions
         //*******************************************************************************************
+
+        /// <summary>
+        /// This adds a moon to the dictionary.
+        /// </summary>
+        /// <param name="type">The type of the Moon</param>
+        /// <param name="dist">The distance from the parent planet</param>
+        public void AddMoon(MoonType type, double dist)
+        {
+            this.PlanetaryMoons.Add(type, dist);
+        }
 
         /// <summary>
         /// This is a function that determines if it is a gas giant.
@@ -148,55 +168,393 @@ namespace TwilightShards.GURPSUtil
                 return false;
         }
 
+        /// <summary>
+        /// Sets the atmosphere marginal status.
+        /// </summary>
+        /// <param name="val">The value to set it to marginal</param>
+        public void SetAtmosphereMarginal(bool val)
+        {
+            this.atmoBreakdown.SetMarginal(val);
+        }
+
+        public void SetAtmosphereCorrosive(bool val)
+        {
+            this.atmoBreakdown.SetCorrosive(true);
+        }
+
+        public void SetAtmosphereLethallyToxic(bool val)
+        {
+            this.atmoBreakdown.SetLethallyToxic(true);
+        }
+
+        public void SetAtmosphereSuffocating(bool val)
+        {
+            this.atmoBreakdown.SetSuffocating(true);
+        }
+
+        /// <summary>
+        /// This function purges the atmosphere.
+        /// </summary>
+        public void PurgeAtmosphere()
+        {
+            this.atmoBreakdown.Purge();
+        }
+
         //*******************************************************************************************
         // Planetary Description Functions
         //*******************************************************************************************
 
         /// <summary>
-        /// This function will produce a string description of the planetary atmosphere
+        /// This function will create the atmosphere record.
         /// </summary>
-        /// <returns></returns>
-        public string DescribeAtmosphere()
+        public void CreateAtmosphere(Dice ourDice)
         {
-            string desc = "";
+            if (this.worldSize == WorldSize.Small)
+            {
+                if (this.biomeType == WorldType.Ice)
+                {
+                    atmoBreakdown.AddAtmoElement("Nitrogen", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Methane", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Argon", ElemAmount.Some);
+                    atmoBreakdown.AddAtmoElement("Ammonia", ElemAmount.Trace);
+                    atmoBreakdown.AddAtmoElement("Carbon Dioxide", ElemAmount.Trace);
+                    atmoBreakdown.SetSuffocating(true);
 
-            //first is atmosphere composition
-            desc = desc + "Atmosphere Composition: ";
+                    if (ourDice.rollUnderGurps(15))
+                        atmoBreakdown.SetMildlyToxic(true);
+                    else
+                        atmoBreakdown.SetHighlyToxic(true);
+                }
+            }
 
-            if (this.worldSize == WorldSize.Small && this.biomeType == WorldType.Ice)
-                desc = desc + "Primarily Nitrogen and Methane, with components of Argon, and some trace ammonia and carbon dioxide."
-                       + Environment.NewLine;
 
-            if (this.worldSize == WorldSize.Standard && this.biomeType == WorldType.Ice)
-                desc = desc + "Primarily Carbon Dioxide and Nitrogen, with some Methane or Sulfur Dioxide" + Environment.NewLine;
+            if (this.worldSize == WorldSize.Standard)
+            { 
+                if (this.biomeType == WorldType.Ice)
+                {
+                    atmoBreakdown.AddAtmoElement("Carbon Dioxide", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Nitrogen", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Methane", ElemAmount.Some);
+                    atmoBreakdown.AddAtmoElement("Sulfur Dioxide", ElemAmount.Some);
+                    atmoBreakdown.SetSuffocating(true);
 
-            if (this.worldSize == WorldSize.Large && this.biomeType == WorldType.Ice)
-                desc = desc + "Primarily Helium and Nitrogen, with some Sulfur Dioxide, Chlorine and Flourine" + Environment.NewLine;
+                    if (!(ourDice.rollUnderGurps(12)))
+                        atmoBreakdown.SetMildlyToxic(true);
+                }
+
+                if (this.biomeType == WorldType.Ocean)
+                {
+                    atmoBreakdown.AddAtmoElement("Nitrogen", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Carbon Dioxide", ElemAmount.Primary);
+                    atmoBreakdown.SetSuffocating(true);
+                    if (!(ourDice.rollUnderGurps(12)))
+                        atmoBreakdown.SetCorrosive(true);
+                }
+
+                if (this.biomeType == WorldType.Garden)
+                {
+                    atmoBreakdown.AddAtmoElement("Nitrogen", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Oxygen", ElemAmount.Some);
+                }
+            }
+
+            if (this.worldSize == WorldSize.Large)
+            {
+                if (this.biomeType == WorldType.Ice)
+                {
+                    atmoBreakdown.AddAtmoElement("Helium", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Nitrogen", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Chlorine", ElemAmount.Some);
+                    atmoBreakdown.AddAtmoElement("Flourine", ElemAmount.Some);
+                    atmoBreakdown.AddAtmoElement("Sulfur Dioxide", ElemAmount.Some);
+                    atmoBreakdown.SetSuffocating(true);
+                    atmoBreakdown.SetHighlyToxic(true);
+                }
+
+                if (this.biomeType == WorldType.Ocean)
+                {
+                    atmoBreakdown.AddAtmoElement("Helium", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Nitrogen", ElemAmount.Primary);
+                    atmoBreakdown.SetSuffocating(true);
+                    atmoBreakdown.SetHighlyToxic(true);
+                }
+
+                if (this.biomeType == WorldType.Garden)
+                {
+                    atmoBreakdown.AddAtmoElement("Nitrogen", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Oxygen", ElemAmount.Primary);
+                    atmoBreakdown.AddAtmoElement("Noble Gasses (Argon, Krypton, Neon)", ElemAmount.Some);
+                }
+            }
+
+            if (this.biomeType == WorldType.DryGreenhouse)
+            {
+                atmoBreakdown.AddAtmoElement("Carbon Dioxide", ElemAmount.Primary);
+                atmoBreakdown.AddAtmoElement("Sulfur Dioxide", ElemAmount.Primary);
+                atmoBreakdown.SetSuffocating(true);
+                atmoBreakdown.SetLethallyToxic(true);
+                atmoBreakdown.SetCorrosive(true);
+            }
+
+            if (this.biomeType == WorldType.WetGreenhouse)
+            {
+                atmoBreakdown.AddAtmoElement("Carbon Dioxide", ElemAmount.Primary);
+                atmoBreakdown.AddAtmoElement("Nitrogen", ElemAmount.Primary);
+                atmoBreakdown.AddAtmoElement("Water Vapor", ElemAmount.Some);
+                atmoBreakdown.AddAtmoElement("Oxygen", ElemAmount.Trace);
+                atmoBreakdown.SetSuffocating(true);
+                atmoBreakdown.SetLethallyToxic(true);
+                atmoBreakdown.SetCorrosive(true);
+            }
 
             if ((this.worldSize == WorldSize.Standard || this.worldSize == WorldSize.Large) && this.biomeType == WorldType.Ammonia)
-                desc = desc + "Primarily Nitrogen with a large amount of ammonia and methane." + Environment.NewLine;
+            {
+                atmoBreakdown.AddAtmoElement("Nitrogen", ElemAmount.Primary);
+                atmoBreakdown.AddAtmoElement("Ammonia", ElemAmount.Some);
+                atmoBreakdown.AddAtmoElement("Methane", ElemAmount.Some);
+                atmoBreakdown.SetSuffocating(true);
+                atmoBreakdown.SetLethallyToxic(true);
+                atmoBreakdown.SetCorrosive(true);
+            }
+                
+            //add atmosphere conditions
+            foreach (AtmosphericConditions ac in this.atmoConditions)
+            {
+                if (ac == AtmosphericConditions.Chlorine){
+                    if (ourDice.dblProb() < .78)
+                    {
+                        atmoBreakdown.AddOrIncreaseAtmoElement("Chlorine", ElemAmount.Trace);
+                        atmoBreakdown.AddSpecialCondition("Unfiltered air is corrosive and poisonous");
+                    }
+                    else
+                    {
+                        atmoBreakdown.AddOrIncreaseAtmoElement("Chlorine", ElemAmount.Some);
+                        atmoBreakdown.AddSpecialCondition("The air is faintly colored and views are faintly distorted");
+                        atmoBreakdown.AddSpecialCondition("Rainfall is a weak hydrochloric solution");
+                        atmoBreakdown.AddSpecialCondition("Certain areas are extremely lethal, with the general atmosphere being highly toxic.");
+                        atmoBreakdown.AddSpecialCondition("The atmosphere is corrosive.");
+                    }
+                }
 
-            if (this.worldSize == WorldSize.Standard && this.biomeType == WorldType.Ocean)
-                desc = desc + "Primarily Carbon Dioxide and Nitrogen." + Environment.NewLine;
+                //if (ac == AtmosphericConditions.Corrosive)
+                //    atmoBreakdown.AddSpecialCondition("The atmosphere is corrosive.");
 
-            if (this.worldSize == WorldSize.Large && this.biomeType == WorldType.Ocean)
-                desc = desc + "Primarily Helium and Nitrogen." + Environment.NewLine;
+                // AtmosphericConditions.EffectiveOnePressureClassDown is ignored. It's mainly
+                // for pressure classes. 
+                // So is AtmosphericConditions.EffectiveOnePressureClassUp for the same reasons.
+                // It has now been removed.
 
-            if (this.worldSize == WorldSize.Standard && this.biomeType == WorldType.Garden)
-                desc = desc + "Primarily Nitrogen and Oxygen with some Argon and other trace gasses." + Environment.NewLine;
+                if (ac == AtmosphericConditions.FlammabilityOneClassUp)
+                    atmoBreakdown.AddSpecialCondition("The high oxygen concentration in the atmosphere has made everything more flammable.");
 
-            if (this.worldSize == WorldSize.Large && this.biomeType == WorldType.Garden)
-                desc = desc + "Primarily Nitrogen and Oxygen, with some Argon, Neon, and some Krypton." + Environment.NewLine;
+                if (ac == AtmosphericConditions.Flourine)
+                {
+                    if (ourDice.dblProb() < .78)
+                    {
+                        atmoBreakdown.AddOrIncreaseAtmoElement("Flourine", ElemAmount.Trace);
+                        atmoBreakdown.AddSpecialCondition("Unfiltered air is corrosive and poisonous");
+                    }
+                    else
+                    {
+                        atmoBreakdown.AddOrIncreaseAtmoElement("Flourine", ElemAmount.Some);
+                        atmoBreakdown.AddSpecialCondition("The air is faintly colored and views are faintly distorted");
+                        atmoBreakdown.AddSpecialCondition("Rainfall is a weak hydroflouric solution");
+                        atmoBreakdown.AddSpecialCondition("Certain areas are extremely lethal, with the general atmosphere being highly poisonous and toxic.");
+                        atmoBreakdown.AddSpecialCondition("The atmosphere is corrosive.");
+                    }
+                }
+         
+                if (ac == AtmosphericConditions.HighCarbonDioxide)
+                {
+                    if (ourDice.dblProb() > .6 && ourDice.dblProb() < .9)
+                    {
+                        atmoBreakdown.AddOrIncreaseAtmoElement("Carbon Dioxide", ElemAmount.Some);
+                        atmoBreakdown.AddSpecialCondition("The high amount of carbon dioxide causes hyperventiliation");
+                        atmoBreakdown.AddSpecialCondition("The amount of carbon dioxide can be acclimated to.");
+                    }
+                    if (ourDice.dblProb() > .9)
+                    {
+                        atmoBreakdown.AddOrIncreaseAtmoElement("Carbon Dioxide", ElemAmount.Primary);
+                        atmoBreakdown.AddSpecialCondition("The atmosphere is mildly toxic, and cannot be acclimated to.");
+                    }
+                }
 
-            if (this.biomeType == WorldType.DryGreenhouse)
-                desc = desc + "Primarily Carbon Dioxide and some Sulfur Dioxide." + Environment.NewLine;
+                //if (ac == AtmosphericConditions.HighlyToxic)
+                //    atmoBreakdown.AddSpecialCondition("The atmosphere is highly toxic.");
 
-            if (this.biomeType == WorldType.DryGreenhouse)
-                desc = desc + "Primarily Carbon Dioxide, Nitrogen, with large amounts of Water Vapor, and traces of free oxygen.";
+                if (ac == AtmosphericConditions.HighOxygen)
+                    atmoBreakdown.AddSpecialCondition("All ill effects are treated as if the atmosphere was more dense");
 
-            //TODO ATMOSPHERE CONDITIONS
+                if (ac == AtmosphericConditions.InertGases)
+                    atmoBreakdown.AddSpecialCondition("Long term exposure may cause inert gas narcosis.");
 
-            return desc;
+                //if (ac == AtmosphericConditions.LethallyToxic)
+                //    atmoBreakdown.AddSpecialCondition("The atmosphere is lethally toxic.");
+                
+                //LowOxygen is ignored for now. 
+
+                //if (ac == AtmosphericConditions.MildlyToxic)
+                //    atmoBreakdown.AddSpecialCondition("The atmosphere is mildly toxic");
+
+                if (ac == AtmosphericConditions.NitrogenCompounds)
+                {
+                    atmoBreakdown.AddAtmoElement("Nitrogen Oxides", ElemAmount.Trace);
+                    atmoBreakdown.AddSpecialCondition("This atmosphere is mildly toxic, with some areas highly toxic.");
+                    atmoBreakdown.AddSpecialCondition("Any open water will be tainted by acid.");
+                    this.volatileType = HydroCoverageType.AcidTainted;
+                }
+
+                //Obviously, None is ignored. For now.
+
+                if (ac == AtmosphericConditions.OrganicToxins)
+                {
+                    atmoBreakdown.AddSpecialCondition("There are organic toxins in the atmosphere, causing it to be mildly toxic.");
+                    atmoBreakdown.AddSpecialCondition("This may inflict a disease.");
+                }
+                
+                if (ac == AtmosphericConditions.Pollutants)
+                {
+                    atmoBreakdown.AddSpecialCondition("Pollutants like heavy metal or radioactive dust are in the air.");
+                    atmoBreakdown.AddSpecialCondition("This atmosphere is mildly toxic. It may be heavily toxic in certain areas.");
+                }
+
+                //if (ac == AtmosphericConditions.Suffocating)
+                //    atmoBreakdown.AddSpecialCondition("The atmosphere is suffocating.");
+                
+                if (ac == AtmosphericConditions.SulfurCompounds)
+                {
+                    atmoBreakdown.AddSpecialCondition("There are compounds such as Hydrogen sulfide, Sulfur Dioxide and Sulfur Trioxide in the atmosphere");
+                    atmoBreakdown.AddSpecialCondition("Rainfaull and standing water are weak solutions of sulfuric acid.");
+                    atmoBreakdown.AddSpecialCondition("The atmosphere is mildly toxic, but highly toxic near a source of sulfur compounds");
+                    atmoBreakdown.AddAtmoElement("Sulfur Oxides", ElemAmount.Trace);
+                    this.volatileType = HydroCoverageType.SulfuricAcid;
+                }
+            }
         }
+
+        /// <summary>
+        /// This function sees if the atmosphere is corrosive
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAtmosphereCorrosive()
+        {
+            return this.atmoBreakdown.IsCorrosive();
+        }
+
+        /// <summary>
+        /// This function sees if the atmosphere is suffocating
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAtmosphereSuffocating()
+        {
+            return this.atmoBreakdown.IsSuffocating();
+        }
+
+        /// <summary>
+        /// This function sees if the atmosphere is toxic
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAtmosphereToxic()
+        {
+            return this.atmoBreakdown.IsToxic();
+        }
+
+        /// <summary>
+        /// Is this atmosphere mildly toxic?
+        /// </summary>
+        /// <returns>true if mildly toxic, false if not.</returns>
+        public bool IsAtmosphereMildlyToxic()
+        {
+            return this.atmoBreakdown.IsMildlyToxic();
+        }
+
+        /// <summary>
+        /// Is this atmosphere highly toxic?
+        /// </summary>
+        /// <returns>true if highly toxic, false if not.</returns>
+        public bool IsAtmosphereHighlyToxic()
+        {
+            return this.atmoBreakdown.IsHighlyToxic();
+        }
+
+        /// <summary>
+        /// Is this atmosphere lethally toxic?
+        /// </summary>
+        /// <returns>true if lethally toxic, false if not.</returns>
+        public bool IsAtmosphereLethallyToxic()
+        {
+            return this.atmoBreakdown.IsLethallyToxic();
+        }
+
+        /// <summary>
+        /// This determines if the atmosphere is breathable.
+        /// </summary>
+        /// <returns>True if breathable, false if not.</returns>
+        public bool IsBreathableAtmosphere()
+        {
+            bool atmoVal = true;
+            if (IsAtmosphereSuffocating()) atmoVal = false;
+            if (IsAtmosphereCorrosive()) atmoVal = false;
+            if (IsAtmosphereToxic()) atmoVal = false;
+            if (this.atmoPressure < .01) atmoVal = false;
+            return atmoVal;
+        }
+
+        /// <summary>
+        /// This checks if the atmosphere is present
+        /// </summary>
+        /// <returns>True if the atmosphere is present, false if not</returns>
+        public bool IsAtmospherePresent()
+        {
+            if (this.atmoPressure > .01)
+                return true;
+            else
+                return false;
+        }
+
+        /// <summary>
+        /// Is this atmosphere marginal
+        /// </summary>
+        /// <returns>true if marginal, false if not.</returns>
+        public bool IsMarginal()
+        {
+            return this.atmoBreakdown.IsMarginal();
+        }
+
+        /// <summary>
+        /// This returns the orbital distance from the primary
+        /// </summary>
+        /// <returns>The orbital distance from the primary</returns>
+        public double GetOrbitalDistanceToPrimary()
+        {
+            foreach (StarRecord s in this.parentStars)
+            {
+                if (s.isPrimary == true)
+                {
+                    return s.orbitalDist;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// This function converts the planetary diameter into AUs.
+        /// </summary>
+        /// <returns></returns>
+        public double ConvertPlanetaryDiameterToAU()
+        {
+            //planetary diameters are stored in KM.
+            return (this.worldDiameter * (PlanetReference.EarthDiameter * .00000000668458712));
+        }
+
+        /// <summary>
+        /// This function returns the atmosphere description
+        /// </summary>
+        /// <returns>A string describing the atmosphere</returns>
+        public string DescribeAtmosphere()
+        {
+            return this.atmoBreakdown.DescribeAtmosphere();
+        } 
     }
 }

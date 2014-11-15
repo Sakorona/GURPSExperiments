@@ -100,6 +100,9 @@ namespace TwilightShards.genLibrary
         /// <returns>A number in that range</returns>
         public int rng(int size)
         {
+            if (size <= 0)
+                throw new Exception("The size of the dice must be positive.");
+            
             return (int)(size * dice.NextDoublePositive() + 1);
         }
 
@@ -110,6 +113,9 @@ namespace TwilightShards.genLibrary
         /// <returns>A number in that range</returns>
         public long rng(long size)
         {
+            if (size <= 0)
+                throw new Exception("The size of the dice must be positive.");
+            
             return (long)(size * dice.NextDoublePositive() + 1);
         }
         
@@ -121,6 +127,11 @@ namespace TwilightShards.genLibrary
         /// <returns>A number in the range given by numDsize</returns>
         public int rng(int num, int size)
         {
+            if (size <= 0)
+                throw new Exception("The size of the dice must be positive.");
+            if (num <= 0)
+                throw new Exception("The number of the dice must be positive.");            
+
             int total = 0;
             for (int i = 0; i < num; i++)
             {
@@ -138,6 +149,11 @@ namespace TwilightShards.genLibrary
         /// <returns>A number in the range given by numDsize</returns>
         public long rng(int num, long size)
         {
+            if (size <= 0)
+                throw new Exception("The size of the dice must be positive.");
+            if (num <= 0)
+                throw new Exception("The number of the dice must be positive.");
+
             long total = 0;
             for (int i = 0; i < num; i++)
             {
@@ -156,6 +172,11 @@ namespace TwilightShards.genLibrary
         /// <returns>A number in the range given by numDsize + mod</returns>
         public virtual int rng(int num, int size, int mod)
         {
+            if (size <= 0)
+                throw new Exception("The size of the dice must be positive.");
+            if (num <= 0)
+                throw new Exception("The number of the dice must be positive.");
+
             int total;
             total = this.rng(num, size) + mod;
             return total;
@@ -171,6 +192,11 @@ namespace TwilightShards.genLibrary
         /// <returns>A number in the range, multiplied by the given number</returns>
         public virtual double MultiplyRNG(int num, int size, int mod, double multiplier)
         {
+            if (size <= 0)
+                throw new Exception("The size of the dice must be positive.");
+            if (num <= 0)
+                throw new Exception("The number of the dice must be positive.");
+
             double total;
             total = (this.rng(num, size) + mod) * multiplier;
 
@@ -187,13 +213,18 @@ namespace TwilightShards.genLibrary
         /// <returns>A number in the range, multiplied by the given number</returns>
         public virtual int MultiplyRNG(int num, int size, int mod, int multiplier)
         {
+            if (size <= 0)
+                throw new Exception("The size of the dice must be positive.");
+            if (num <= 0)
+                throw new Exception("The number of the dice must be positive.");
+
             int total;
             total = (this.rng(num, size) + mod) * multiplier;
 
             return total;
         }
 
-        /// <summary>
+        /// <summary> 
         /// A number of die from 1 to num, from 1 to the size with a modifer. Will always return greater than or equal to zero.
         /// </summary>
         /// <param name="num">Number of die</param>
@@ -202,6 +233,11 @@ namespace TwilightShards.genLibrary
         /// <returns>A number in the range given by numDsize + mod , but always greater than or equal to zero.</returns>
         public int rngGTZero(int num, int size, int mod)
         {
+            if (size <= 0)
+                throw new Exception("The size of the dice must be positive.");
+            if (num <= 0)
+                throw new Exception("The number of the dice must be positive.");
+
             int total = this.rng(num, size) + mod;
             return total > 0 ? total : 0;
         }
@@ -258,8 +294,7 @@ namespace TwilightShards.genLibrary
             if (endVal == startVal)
                 return startVal;
 
-            double range = endVal - startVal;
-            return (dice.NextDoublePositive() * range + startVal);
+            return (dice.NextDoublePositive() * (endVal - startVal) + startVal);
         }
 
         /// <summary>
@@ -357,10 +392,10 @@ namespace TwilightShards.genLibrary
             double val;
 
             if (!exclusive)
-                return this.rollRange(baseValue - variance, baseValue + variance);
+                return this.rollInRange(baseValue - variance, baseValue + variance);
             else{
                 do{
-                   val = this.rollRange(baseValue - variance, baseValue + variance);
+                   val = this.rollInRange(baseValue - variance, baseValue + variance);
                 } while (val == baseValue - variance || val == baseValue + variance);
                 return val;
             }
@@ -376,11 +411,7 @@ namespace TwilightShards.genLibrary
         /// <returns>A varied value</returns>
         public double VaryResultMax(double variance, double baseValue, double max, bool exclusive = false)
         {
-            double val = VaryResult(variance, baseValue, exclusive);
-            if (val > max)
-                return max;
-            else
-                return val;
+            return Math.Min(VaryResult(variance, baseValue, exclusive), max);
         }
 
         /// <summary>

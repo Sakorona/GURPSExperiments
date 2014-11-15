@@ -58,6 +58,7 @@ namespace GenerateGURPSPlanet
             double star1Lumin, star2Lumin, star3Lumin, star4Lumin, star5Lumin, star1Distance, star2Distance, star3Distance, star4Distance, 
                 star5Distance, parentMass, primaryMass, systemAge;
 
+            Dice ourDice = new Dice();
             Planet currPlanet = new Planet();
 
             if (!(Double.TryParse(txtStar1Luminosity.Text, out star1Lumin)))
@@ -88,8 +89,8 @@ namespace GenerateGURPSPlanet
                 return;
 
             //get values from interface
-            currPlanet.worldSize = StarReference.convertWorldSize(cmbWorldSize.SelectedItem.ToString());
-            currPlanet.planetType = StarReference.convertPlanetType(cmbWorldType.SelectedItem.ToString());
+            currPlanet.worldSize = PlanetReference.ConvertWorldSize(cmbWorldSize.SelectedItem.ToString());
+            currPlanet.planetType = PlanetReference.ConvertPlanetType(cmbWorldType.SelectedItem.ToString());
             string selectedParentType = cmbParenType.SelectedItem.ToString();
             
             bool genMoons = false;
@@ -108,36 +109,29 @@ namespace GenerateGURPSPlanet
                 currPlanet.parentStars.Add(new StarRecord(4, false, star5Distance));
 
             //We need to roll moons. 
-            if (currPlanet.planetType == PlanetType.TerrestialPlanet && genMoons)
+            if (genMoons)
             {
-                currPlanet.majorMoons = StarReference.getTerrestialMajorMoons(ourDice, currPlanet.worldSize, star1Distance);
-                if (currPlanet.majorMoons == 0)
-                    currPlanet.moonlets = StarReference.getTerrestialMoonlets(ourDice, currPlanet.worldSize, star1Distance);
-                else
-                    currPlanet.moonlets = 0;
-            }
+                if (currPlanet.planetType == PlanetType.TerrestialPlanet)
+                    PlanetReference.GenerateTerrestialMoons(ourDice, currPlanet, star1Distance);
 
-            if (currPlanet.planetType == PlanetType.GasGiantPlanet && genMoons) 
-            {
-                currPlanet.ringMoons = StarReference.getGasGiantRingMoons(ourDice, star1Distance);
-                currPlanet.majorMoons = StarReference.getGasGiantMajorMoons(ourDice, star1Distance);
-                currPlanet.capturedMoons = StarReference.getGasGiantCapturedMoons(ourDice, star1Distance);
+                if (currPlanet.planetType == PlanetType.GasGiantPlanet)
+                    PlanetReference.GenerateGasGiantMoons(ourDice, currPlanet, star1Distance);
             }
 
             //calc blackbody.
             double[] blackbody = new double[5];
             if (star1Distance != 0)
-                blackbody[0] = StarReference.getBlackBodyTemp(star1Lumin, star1Distance);
+                blackbody[0] = PlanetReference.GetBlackBodyTemp(star1Lumin, star1Distance);
             if (star2Distance != 0)
-                blackbody[1] = StarReference.getBlackBodyTemp(star2Lumin, star2Distance);
+                blackbody[1] = PlanetReference.GetBlackBodyTemp(star2Lumin, star2Distance);
             if (star3Distance != 0)
-                blackbody[2] = StarReference.getBlackBodyTemp(star4Lumin, star3Distance);
+                blackbody[2] = PlanetReference.GetBlackBodyTemp(star4Lumin, star3Distance);
             if (star4Distance != 0)
-                blackbody[3] = StarReference.getBlackBodyTemp(star4Lumin, star4Distance);
+                blackbody[3] = PlanetReference.GetBlackBodyTemp(star4Lumin, star4Distance);
             if (star5Distance != 0)
-                blackbody[4] = StarReference.getBlackBodyTemp(star5Lumin, star5Distance);
+                blackbody[4] = PlanetReference.GetBlackBodyTemp(star5Lumin, star5Distance);
 
-             currPlanet.blackbodyTemp = StarReference.getBlackbodyTempTotal(blackbody);
+            currPlanet.blackbodyTemp = PlanetReference.GetBlackbodyTempTotal(blackbody);
             
 
             //now that we have the blackbody, let's get the world type.
@@ -155,8 +149,20 @@ namespace GenerateGURPSPlanet
 
                 //hydrographic coverage and climate info
                 PlanetReference.GenerateHydrographicCoverage(ourDice, currPlanet);
+                currPlanet.CreateAtmosphere(ourDice); //call this to create the atmosphere
                 currPlanet.surfaceTemp = PlanetReference.GenerateSurfaceTempFromBlackbody(currPlanet);
+
+                //physical and dynamic properties
+                PlanetReference.GeneratePhysicalProperties(ourDice, currPlanet);
             }
+
+            if (currPlanet.IsGasGiant())
+            {
+                PlanetReference.GenerateGasGiantProperties(ourDice, currPlanet);
+            }
+
+            PlanetReference.GenerateDynamicParameters(ourDice, currPlanet, parentMass);
+
             //and now we format the output! :D :D :D 
         }
     }

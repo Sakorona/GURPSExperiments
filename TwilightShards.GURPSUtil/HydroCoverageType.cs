@@ -13,6 +13,8 @@ namespace TwilightShards.GURPSUtil
        AmmoniaEutectic,
        GreenhouseOcean,
        ExtremeGreenhouseOcean,
-       Hydrocarbons
+       Hydrocarbons,
+       AcidTainted,
+       SulfuricAcid
     }
 }
