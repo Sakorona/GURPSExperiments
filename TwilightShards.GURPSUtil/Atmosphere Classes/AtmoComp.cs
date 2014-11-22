@@ -203,45 +203,45 @@ namespace TwilightShards.GURPSUtil
             //now each.
             foreach (string s in primaryElements)
             {
-                desc += s + " , ";
+                desc += " " + s + ",";
             }
 
             if (secondaryElements.Count >= 1)
                 desc += " with significant amounts of ";
             foreach (string s in secondaryElements)
             {
-                desc += s + " , ";
+                desc += " " + s + ",";
             }
 
             if (traceElements.Count >= 1)
-                desc += " and trace amounts of ";
+                desc += " and trace amounts of";
             for (int i = 0; i < traceElements.Count; i++)
             {
-                desc += traceElements[i];
+                desc += " " + traceElements[i];
                 if ((i + 1) < (traceElements.Count - 1))
-                    desc += " , ";
+                    desc += ",";
             }
 
             desc += Environment.NewLine;
-            desc += "Special Conditions: ";
+            desc += "Special Conditions:";
 
             if (this.IsCorrosive())
-                desc += flagDescription["Corrosive"] + "; ";
+                desc += flagDescription["Corrosive"] + ";";
             if (this.IsHighlyToxic())
-                desc += flagDescription["HighlyToxic"] + "; ";
+                desc += flagDescription["HighlyToxic"] + ";";
             if (this.IsLethallyToxic())
-                desc += flagDescription["LethallyToxic"] + "; ";
+                desc += flagDescription["LethallyToxic"] + ";";
             if (this.IsMildlyToxic())
-                desc += flagDescription["MildlyToxic"] + "; ";
+                desc += flagDescription["MildlyToxic"] + ";";
             if (this.IsSuffocating())
-                desc += flagDescription["Suffocating"] + "; ";
+                desc += flagDescription["Suffocating"] + ";";
 
             //add in atmosphere conditions
             for (int i = 0; i < this.atmoConditions.Count; i++)
             {
-                desc += this.atmoConditions[i];
+                desc += " " + this.atmoConditions[i];
                 if ((i + 1) < (traceElements.Count - 1))
-                    desc += "; ";
+                    desc += ";";
             }
 
             return desc;

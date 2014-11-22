@@ -46,8 +46,10 @@
     <Compile Include="Atmosphere Classes\AtmosphericConditions.cs" />
     <Compile Include="Atmosphere Classes\ElemAmount.cs" />
     <Compile Include="GasGiantType.cs" />
+    <Compile Include="GeologicActivity.cs" />
     <Compile Include="HydroCoverageType.cs" />
-    <Compile Include="MoonType.cs" />
+    <Compile Include="Moon Classes\MoonRecord.cs" />
+    <Compile Include="Moon Classes\MoonType.cs" />
     <Compile Include="Planet.cs" />
     <Compile Include="PlanetReference.cs" />
     <Compile Include="PlanetType.cs" />

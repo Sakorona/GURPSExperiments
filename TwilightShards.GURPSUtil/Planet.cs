@@ -31,7 +31,8 @@ namespace TwilightShards.GURPSUtil
         /// <summary>
         /// This contains the moons of the planet. 
         /// </summary>
-        public Dictionary<MoonType, double> PlanetaryMoons { get; set;}
+        /// <remarks>The value in this is in planetary diameters.</remarks>
+        public List<MoonRecord> PlanetaryMoons { get; set; }
         public double blackbodyTemp { get; set; }
         public double surfaceTemp { get; set; }
         public WorldType biomeType { get; set; }
@@ -57,18 +58,34 @@ namespace TwilightShards.GURPSUtil
         public int resourceValue { get; set; }
         public double eccentricity { get; set; }
         public double orbitalPeriod { get; set; }
-        public double moonOrbitalLen { get; set; }
+        
+        /// <summary>
+        /// This is the period the world takes to complete one rotation to a distant fixed point
+        /// </summary>
+        public double siderealPeriod { get; set;}
+        
+        //public double moonOrbitalLen { get; set; }
         public int axialTilt { get; set; }
-        public int dayLength { get; set; }
-        public string geologicActivity { get; set; }
-        public string volcanicActivity { get; set; }
+        public double dayLength { get; set; }
+        public GeologicActivity tectonicActivity { get; set; }
+        public GeologicActivity volcanicActivity { get; set; }
+
+        /// <summary>
+        /// This checks if the world is tidal locked
+        /// </summary>
+        public bool IsTidalLocked { get; set; }
+
+        /// <summary>
+        /// This checks if the world is orbiting in a retrograde manner
+        /// </summary>
+        public bool IsRetrograde { get; set; }
 
         public Planet()
         {
             atmoBreakdown = new AtmoComp();
             parentStars = new List<StarRecord>();
             atmoConditions = new List<AtmosphericConditions>();
-            PlanetaryMoons = new Dictionary<MoonType, double>();
+            PlanetaryMoons = new List<MoonRecord>();
         }
 
         //*******************************************************************************************
@@ -115,9 +132,43 @@ namespace TwilightShards.GURPSUtil
         /// </summary>
         /// <param name="type">The type of the Moon</param>
         /// <param name="dist">The distance from the parent planet</param>
-        public void AddMoon(MoonType type, double dist)
+        public void AddMoon(MoonType type, double dist, WorldSize size)
         {
-            this.PlanetaryMoons.Add(type, dist);
+            this.PlanetaryMoons.Add(new MoonRecord(type, dist,size));
+        }
+
+        /// <summary>
+        /// This checks to see if the orbital is present or within a variance
+        /// </summary>
+        /// <param name="dist">Distance</param>
+        /// <param name="allowedDist">Allowed variance</param>
+        /// <returns>True if present or within variance, false otherwise</returns>
+        public bool CheckLunarOrbitalPresent(double dist, double allowedDist)
+        {
+            foreach (MoonRecord md in this.PlanetaryMoons)
+            {
+                if ((md.orbitalRadius != 0) &&
+                    (md.orbitalRadius >= (dist - allowedDist)) && (md.orbitalRadius <= (dist + allowedDist))){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// This returns a count of how many major moons this world has.
+        /// </summary>
+        /// <returns>A count of major moons</returns>
+        public int MajorMoonCount()
+        {
+            int moons = 0;
+            foreach (MoonRecord mr in this.PlanetaryMoons)
+            {
+                if (mr.moon == MoonType.MajorMoon) moons++;
+            }
+
+            return moons;
         }
 
         /// <summary>
@@ -423,8 +474,8 @@ namespace TwilightShards.GURPSUtil
                 
                 if (ac == AtmosphericConditions.SulfurCompounds)
                 {
-                    atmoBreakdown.AddSpecialCondition("There are compounds such as Hydrogen sulfide, Sulfur Dioxide and Sulfur Trioxide in the atmosphere");
-                    atmoBreakdown.AddSpecialCondition("Rainfaull and standing water are weak solutions of sulfuric acid.");
+                    atmoBreakdown.AddSpecialCondition("There are compounds such as Hydrogen sulfide, Sulfur Dioxide and Sulfur Trioxide in the atmosphere.");
+                    atmoBreakdown.AddSpecialCondition("Rainfall and standing water are weak solutions of sulfuric acid.");
                     atmoBreakdown.AddSpecialCondition("The atmosphere is mildly toxic, but highly toxic near a source of sulfur compounds");
                     atmoBreakdown.AddAtmoElement("Sulfur Oxides", ElemAmount.Trace);
                     this.volatileType = HydroCoverageType.SulfuricAcid;
@@ -555,6 +606,76 @@ namespace TwilightShards.GURPSUtil
         public string DescribeAtmosphere()
         {
             return this.atmoBreakdown.DescribeAtmosphere();
-        } 
+        }
+
+        public string DescribePlanet()
+        {
+            string desc = "";
+            desc = "Planet: " + this.worldSize + " (" + this.biomeType + ") orbits at ";
+            desc = desc + this.GetOrbitalDistanceToPrimary() + " AU. ";
+            desc = desc + Environment.NewLine;
+            desc = desc + "Blackbody Temperature: " + this.blackbodyTemp + " K" + Environment.NewLine;
+            
+            //physical properties
+            desc = desc + "Diameter: " + Math.Round(this.worldDiameter* PlanetReference.EarthDiameter,2)  + " KM ";
+            desc = desc + "Mass: " + Math.Round(this.worldMass, 2) + " earth masses. Density: " + Math.Round(this.worldDensity,2) * PlanetReference.EarthDensity + " g/cc ";
+            desc = desc + "Gravity: " + Math.Round(this.worldGravity * PlanetReference.EarthGravity,2) + " m/s^2";
+            desc = desc + Environment.NewLine;
+            
+            //atmospheric properties
+            desc = desc + "Atmospheric Pressure: " + Math.Round(this.atmoPressure,2) + " atm, with mass: " + Math.Round(this.atmoMass,2);
+            desc = desc + Environment.NewLine;
+            desc = desc + this.DescribeAtmosphere();
+            desc = desc + Environment.NewLine;
+
+            //hydrographic coverage
+            desc = desc + "Hydrographic Coverage: " + Math.Round((this.hydroCoverage * 100), 2) + "%. Type: ";
+            desc = desc + PlanetReference.DescribeHydrographicCoverage(this.volatileType);
+            desc = desc + Environment.NewLine;
+
+            //Climate properties
+            desc = desc + "Climate: ";
+            desc = desc + PlanetReference.GetClimateName(this.surfaceTemp, true, true);
+            desc = desc + Environment.NewLine;
+
+            //moons?
+            desc = desc + "Moons: " + this.PlanetaryMoons.Count() + Environment.NewLine;
+            foreach (MoonRecord mr in this.PlanetaryMoons)
+            {
+                desc = desc + "Moon Type: " + mr.moon + " at orbital " + mr.orbitalRadius + " and size: ";
+                desc = desc + mr.moonSize;
+                desc = desc + Environment.NewLine;
+            }
+
+            //FINALLY, orbital characteristics.
+            desc = desc + Environment.NewLine;
+            desc = desc + "Orbital Characteristics" + Environment.NewLine;
+
+            if (eccentricity != 0)
+            {
+                desc = desc + "Eccentricity: " + Math.Round(this.eccentricity,2) + " with Periastron of ";
+                desc = desc + PlanetReference.GetPeriastron(this.GetOrbitalDistanceToPrimary(),
+                             this.eccentricity) + " AU and apastron of " +
+                             PlanetReference.GetApastron(this.GetOrbitalDistanceToPrimary(), this.eccentricity) +
+                             " AU";
+                desc = desc + Environment.NewLine;
+                desc = desc + "Axial Tilt of " + this.axialTilt + Environment.NewLine + "";
+            }
+            else
+            {
+                desc = desc + "Eccentricity of 0 and an axial tilt of " + this.axialTilt + Environment.NewLine;
+            }
+            desc = desc + "Sidereal Period: " + Math.Round(this.siderealPeriod,2) + " days. Rotation Period: " + Math.Round(this.dayLength,2) + " days.";
+            desc = desc + Environment.NewLine;
+            desc = desc + "Year Length is " + Math.Round(this.orbitalPeriod,2) + " T-years.";
+
+            return desc;
+        }
+
+        public override string ToString()
+        {
+            return DescribePlanet();
+        }
+
     }
 }

@@ -237,6 +237,8 @@ namespace TwilightShards.GURPSUtil
         {
             if (baseVal == "Asteroid Belt")
                 return PlanetType.AsteroidBelt;
+            else if (baseVal == "Terrestial")
+                return PlanetType.TerrestialPlanet;
             else if (baseVal == "Terrestial Planet")
                 return PlanetType.TerrestialPlanet;
             else if (baseVal == "Moon")
@@ -268,6 +270,91 @@ namespace TwilightShards.GURPSUtil
             return WorldSize.None;
         }
 
+        /// <summary>
+        /// This function will get a size a certain number away from the current planet size.
+        /// </summary>
+        /// <param name="workingSize">The size of the world</param>
+        /// <param name="offset">The offset</param>
+        /// <returns>The world size that far off</returns>
+        /// <remarks>This is bounded to not go under Tiny.</remarks>
+        public static WorldSize GetWorldSizeDifference(WorldSize workingSize, int offset)
+        {
+            if (offset == 0)
+                return workingSize;
+            if (offset == 1)
+            {
+                switch (workingSize)
+                {
+                    case WorldSize.Tiny:
+                    case WorldSize.Small:
+                        return WorldSize.Tiny;
+                    case WorldSize.Standard:
+                        return WorldSize.Small;
+                    case WorldSize.Large:
+                        return WorldSize.Standard;
+                    default:
+                        return WorldSize.None;
+                }
+            }
+            if (offset == 2)
+            {
+                switch (workingSize)
+                {
+                    case WorldSize.Tiny:
+                    case WorldSize.Small:
+                    case WorldSize.Standard:
+                        return WorldSize.Tiny;
+                    case WorldSize.Large:
+                        return WorldSize.Small;
+                    default:
+                        return WorldSize.None;
+                }
+            }
+            
+            return WorldSize.Tiny;            
+        }
+
+        /// <summary>
+        /// This function returns the offset world type
+        /// </summary>
+        /// <param name="baseVal">This is the base value</param>
+        /// <param name="compVal">This is the value you want the comparison of</param>
+        /// <returns>The offset of the second value and the first</returns>
+        public static int GetSizeOffset(WorldSize baseVal, WorldSize compVal)
+        {
+            switch (baseVal)
+            {
+                case WorldSize.Large:
+                    if (compVal == WorldSize.Large) return 0;
+                    if (compVal == WorldSize.Standard) return 1;
+                    if (compVal == WorldSize.Small) return 2;
+                    if (compVal == WorldSize.Tiny) return 3;
+                    break;
+                case WorldSize.Standard:
+                    if (compVal == WorldSize.Large) return -1;
+                    if (compVal == WorldSize.Standard) return 0;
+                    if (compVal == WorldSize.Small) return 1;
+                    if (compVal == WorldSize.Tiny) return 2;
+                    break;
+                case WorldSize.Small:
+                    if (compVal == WorldSize.Large) return -2;
+                    if (compVal == WorldSize.Standard) return -1;
+                    if (compVal == WorldSize.Small) return 0;
+                    if (compVal == WorldSize.Tiny) return 1;
+                    break;
+                case WorldSize.Tiny:
+                    if (compVal == WorldSize.Large) return -3;
+                    if (compVal == WorldSize.Standard) return -2;
+                    if (compVal == WorldSize.Small) return -1;
+                    if (compVal == WorldSize.Tiny) return 0;
+                    break;
+                default:
+                    return 999;
+            }
+
+            return -1;
+        }
+
         //*******************************************************************************************
         // Planetary Attribute Generation Methods
         //*******************************************************************************************
@@ -294,12 +381,19 @@ namespace TwilightShards.GURPSUtil
             if (currPlanet.worldSize == WorldSize.Large) mod = mod + 1;
 
             int moons = ourDice.rngGTZero(1, 6, mod);
-
+            int roll = 0, worldOffset = 0;
             if (moons > 0)
             {
                 for (int i = 0; i < moons; i++)
                 {
-                    currPlanet.AddMoon(MoonType.MajorMoon, 0);
+                    //roll for moons
+                    roll = ourDice.gurpsRoll();
+                    if (roll <= 11) worldOffset = 3;
+                    if (roll > 11 && roll <= 14) worldOffset = 2;
+                    if (roll >= 15) worldOffset = 1;
+
+                    currPlanet.AddMoon(MoonType.MajorMoon, 0, 
+                                           PlanetReference.GetWorldSizeDifference(currPlanet.worldSize, worldOffset));
                 }
             }
             if (moons == 0)
@@ -308,7 +402,7 @@ namespace TwilightShards.GURPSUtil
                 int moonlets = ourDice.rngGTZero(1, 6, mod);
                 for (int i = 0; i < moons; i++)
                 {
-                    currPlanet.AddMoon(MoonType.Moonlet, 0);
+                    currPlanet.AddMoon(MoonType.Moonlet, 0, WorldSize.Insignficant);
                 }
             }
         }
@@ -336,7 +430,7 @@ namespace TwilightShards.GURPSUtil
             {
                 for (int i = 0; i < moons; i++)
                 {
-                    currPlanet.AddMoon(MoonType.Ringlet, 0);
+                    currPlanet.AddMoon(MoonType.Ringlet, 0, WorldSize.Insignficant);
                 }
             }
 
@@ -356,7 +450,7 @@ namespace TwilightShards.GURPSUtil
             {
                 for (int i = 0; i < moons; i++)
                 {
-                    currPlanet.AddMoon(MoonType.OuterMoon, 0);
+                    currPlanet.AddMoon(MoonType.OuterMoon, 0, WorldSize.Insignficant);
                 }
             }
 
@@ -372,11 +466,19 @@ namespace TwilightShards.GURPSUtil
                 mod = mod - 1;
 
             moons = ourDice.rngGTZero(1, 6, mod);
+            int roll = 0, worldOffset = 0;
             if (moons > 0)
             {
                 for (int i = 0; i < moons; i++)
                 {
-                    currPlanet.AddMoon(MoonType.MajorMoon, 0);
+                    //roll for moons
+                    roll = ourDice.gurpsRoll();
+                    if (roll <= 11) worldOffset = 3;
+                    if (roll > 11 && roll <= 14) worldOffset = 2;
+                    if (roll >= 15) worldOffset = 1;
+
+                    currPlanet.AddMoon(MoonType.MajorMoon, 0,
+                                           PlanetReference.GetWorldSizeDifference(WorldSize.Large, worldOffset));
                 }
             }
 
@@ -982,15 +1084,309 @@ namespace TwilightShards.GURPSUtil
         /// <param name="ourDice">Dice object</param>
         /// <param name="currPlanet">Current planet</param>
         /// <param name="parentMass">The mass of the parent star</param>
-        public static void GenerateDynamicParameters(Dice ourDice, Planet currPlanet, double parentMass)
+        /// <param name="genMoons">Flag if we are generating moons</param>
+        /// <param name="systemAge">The age of the system</param>
+        public static void GenerateDynamicParameters(Dice ourDice, Planet currPlanet, double parentMass, bool genMoons,
+                                                     double systemAge)
         {
             currPlanet.orbitalPeriod = Math.Sqrt(Math.Pow(currPlanet.GetOrbitalDistanceToPrimary(), 3.0) / 
                 (parentMass + (.000003 * currPlanet.worldMass)));
 
+            ///add eccentricity
             int roll = ourDice.gurpsRoll();
             switch (roll)
             {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    currPlanet.eccentricity = 0;
+                    break;
+                case 4:
+                case 5:
+                case 6:
+                    currPlanet.eccentricity = 0.05;
+                    break;
+                case 7:
+                case 8:
+                case 9:
+                    currPlanet.eccentricity = 0.1;
+                    break;
+                case 10:
+                case 11:
+                    currPlanet.eccentricity = 0.15;
+                    break;
+                case 12:
+                    currPlanet.eccentricity = 0.2;
+                    break;
+                case 13:
+                    currPlanet.eccentricity = 0.3;
+                    break;
+                case 14:
+                    currPlanet.eccentricity = 0.4;
+                    break;
+                case 15:
+                    currPlanet.eccentricity = 0.5;
+                    break;
+                case 16:
+                    currPlanet.eccentricity = 0.6;
+                    break;
+                case 17:
+                    currPlanet.eccentricity = 0.7;
+                    break;
+                case 18:
+                case 19:
+                case 20:
+                case 21:
+                case 22:
+                    currPlanet.eccentricity = 0.8;
+                    break;
+            }
+            
 
+            //tidal forces SKIPPED.
+            roll = ourDice.gurpsRoll();
+            bool slowRot = false, days = false;
+
+            if (roll >= 16) slowRot = true;
+            if ((currPlanet.planetType == PlanetType.GasGiantPlanet && currPlanet.worldSize == WorldSize.Small) ||
+               (currPlanet.planetType == PlanetType.TerrestialPlanet && currPlanet.worldSize == WorldSize.Large))
+                roll = roll + 6;
+            
+            if (currPlanet.planetType == PlanetType.GasGiantPlanet && currPlanet.worldSize == WorldSize.Standard)
+                roll = roll + 10;
+
+            if (currPlanet.planetType == PlanetType.GasGiantPlanet && currPlanet.worldSize == WorldSize.Small)
+                roll = roll + 14;
+
+            if (currPlanet.planetType == PlanetType.GasGiantPlanet && currPlanet.worldSize == WorldSize.Tiny)
+                roll = roll + 18;
+
+            if (roll > 36) slowRot = true;
+
+            if (slowRot)
+            {
+                switch (ourDice.rng(2,6,0))
+                {
+                    //no changes if below 6. Probablity range 2-12
+                    case 7:
+                        days = true;
+                        roll = roll * 2;
+                        break;
+                    case 8:
+                        days = true;
+                        roll = roll * 5;
+                        break;
+                    case 9:
+                        days = true;
+                        roll = roll * 10;
+                        break;
+                    case 10:
+                        days = true;
+                        roll = roll * 20;
+                        break;
+                    case 11:
+                        days = true;
+                        roll = roll * 50;
+                        break;
+                    case 12:
+                        days = true;
+                        roll = roll * 100;
+                        break;
+                }
+            }
+
+            if ((PlanetReference.GetPeriodInDays(currPlanet.orbitalPeriod) < roll) && days)
+            {
+                currPlanet.IsTidalLocked = true;
+            }
+
+            if (days)
+                currPlanet.siderealPeriod = roll;
+            else
+                currPlanet.siderealPeriod = roll / 24.0;
+
+            if (ourDice.gurpsRoll() >= 13)
+                currPlanet.IsRetrograde = true;
+
+            if (currPlanet.orbitalPeriod != currPlanet.siderealPeriod)
+                currPlanet.dayLength = (currPlanet.orbitalPeriod * currPlanet.siderealPeriod) / (currPlanet.orbitalPeriod - currPlanet.siderealPeriod);
+            else
+                currPlanet.dayLength = Double.PositiveInfinity;
+            //not displaying moon orbital cycle
+
+            //axial tilt
+            PlanetReference.GenerateAxialTilt(ourDice, currPlanet);
+            
+            //geologic activity. THE END IS IN SIGHT! 
+            //volcanic activity
+            roll = ourDice.gurpsRoll();
+            roll = roll + (int)Math.Round((currPlanet.worldGravity / systemAge) * 40.0);
+            if (currPlanet.IsTerrestialPlanet() && (currPlanet.MajorMoonCount() > 1))
+                roll = roll + 10;
+            
+            if (currPlanet.biomeType == WorldType.Sulfur) // || currPlanet.biomeType == WorldType.IceSulfur)
+                roll = roll + 60;
+
+            //skpping +5 for major moon of gas giant. No way to track now, also because moon code is sparse
+            //this should be noted in the output as well.
+
+            if (roll <= 16) currPlanet.volcanicActivity = GeologicActivity.None;
+            if (roll >= 17 && roll <= 20) currPlanet.volcanicActivity = GeologicActivity.Light;
+            if (roll >= 21 && roll <= 26) currPlanet.volcanicActivity = GeologicActivity.Moderate;
+            if (roll >= 27 && roll <= 70) currPlanet.volcanicActivity = GeologicActivity.Heavy;
+            if (roll >= 71) currPlanet.volcanicActivity = GeologicActivity.Extreme;
+
+            //tectonic activity
+            roll = ourDice.gurpsRoll();
+            if (currPlanet.volcanicActivity == GeologicActivity.None)
+                roll = roll - 8;
+            if (currPlanet.volcanicActivity == GeologicActivity.Light)
+                roll = roll - 4;
+            if (currPlanet.volcanicActivity == GeologicActivity.Heavy)
+                roll = roll + 4;
+            if (currPlanet.volcanicActivity == GeologicActivity.Extreme)
+                roll = roll + 8;
+
+            if (currPlanet.hydroCoverage == 0)
+                roll = roll - 4;
+            else if (currPlanet.hydroCoverage > 0 && currPlanet.hydroCoverage <= .5)
+                roll = roll - 2;
+
+            if (currPlanet.IsTerrestialPlanet() && (currPlanet.MajorMoonCount() == 1))
+                roll = roll + 2;
+            if (currPlanet.IsTerrestialPlanet() && (currPlanet.MajorMoonCount() > 1))
+                roll = roll + 4;
+
+            if (roll <= 6) currPlanet.tectonicActivity = GeologicActivity.None;
+            if (roll >= 7 && roll <= 10) currPlanet.tectonicActivity = GeologicActivity.Light;
+            if (roll >= 11 && roll <= 14) currPlanet.tectonicActivity = GeologicActivity.Moderate;
+            if (roll >= 15 && roll <= 18) currPlanet.tectonicActivity = GeologicActivity.Heavy;
+            if (roll >= 19) currPlanet.tectonicActivity = GeologicActivity.Extreme;
+
+            if (currPlanet.worldSize == WorldSize.Tiny || currPlanet.worldSize == WorldSize.Small)
+                currPlanet.tectonicActivity = GeologicActivity.None;
+
+            //now generate RVM, Habitability, Affinity
+            PlanetReference.GenerateResourceValue(ourDice, currPlanet);
+        }
+        
+        /// <summary>
+        /// This generates the axial tilt for a world.
+        /// </summary>
+        /// <param name="ourDice">Dice object</param>
+        /// <param name="currPlanet">The current planet we are working with</param>
+        public static void GenerateAxialTilt(Dice ourDice, Planet currPlanet)
+        {
+            int roll = ourDice.gurpsRoll();
+            switch (roll)
+            {
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                    currPlanet.axialTilt = ourDice.rngGTZero(2, 6, -2);
+                    return;
+                case 7:
+                case 8:
+                case 9:
+                    currPlanet.axialTilt = 10 + ourDice.rngGTZero(2, 6, -2);
+                    return;
+                case 10:
+                case 11:
+                case 12:
+                    currPlanet.axialTilt = 20 + ourDice.rngGTZero(2, 6, -2);
+                    return;
+                case 13:
+                case 14:
+                    currPlanet.axialTilt = 30 + ourDice.rngGTZero(2, 6, -2);
+                    return;
+                case 15:
+                case 16:
+                    currPlanet.axialTilt = 40 + ourDice.rngGTZero(2, 6, -2);
+                    return;
+                case 17:
+                case 18:
+                    switch (ourDice.rng(6))
+                    {
+                        case 1:
+                        case 2:
+                            currPlanet.axialTilt = 50 + ourDice.rngGTZero(2, 6, -2);
+                            return;
+                        case 3:
+                        case 4:
+                            currPlanet.axialTilt = 60 + ourDice.rngGTZero(2, 6, -2);
+                            return;
+                        case 5:
+                            currPlanet.axialTilt = 70 + ourDice.rngGTZero(2, 6, -2);
+                            return;
+                        case 6:
+                            currPlanet.axialTilt = 80 + ourDice.rngGTZero(2, 6, -2);
+                            return;
+                    }
+                    return;
+            }
+        }
+        
+        /// <summary>
+        /// This function calculates the orbits of moons around planets.
+        /// </summary>
+        /// <param name="ourDice">The dice object</param>
+        /// <param name="currPlanet">The current planet we're working with</param>
+        public static void PlaceMoons(Dice ourDice, Planet currPlanet)
+        {
+            double temp = 0;
+            if (currPlanet.IsGasGiant())
+            {
+                for (int i = 0; i < currPlanet.PlanetaryMoons.Count(); i++)
+                {
+                    if (currPlanet.PlanetaryMoons[i].moon == MoonType.Ringlet)
+                        currPlanet.PlanetaryMoons[i].orbitalRadius = ourDice.rng(1, 6, 4) / 4;
+
+                    if (currPlanet.PlanetaryMoons[i].moon == MoonType.MajorMoon){
+                        do
+                        {
+                            temp = ourDice.rng(3, 6, 3);
+                            if (temp >= 15) temp = temp + ourDice.rng(2, 6, 0);
+                            temp = temp / 2;
+                        } while (currPlanet.CheckLunarOrbitalPresent(temp, 1));
+
+                        currPlanet.PlanetaryMoons[i].orbitalRadius = temp;
+                    }
+
+                    if (currPlanet.PlanetaryMoons[i].moon == MoonType.OuterMoon)
+                        do {
+                            temp = ourDice.rollInRange(25, 300);
+                        } while (currPlanet.CheckLunarOrbitalPresent(temp, 1));
+
+                    currPlanet.PlanetaryMoons[i].orbitalRadius = temp;
+                }
+            }
+            if (currPlanet.IsTerrestialPlanet())
+            {
+                int mods = 0;
+                for (int i = 0; i < currPlanet.PlanetaryMoons.Count(); i++)
+                {
+                    if (currPlanet.PlanetaryMoons[i].moon == MoonType.MajorMoon)
+                    {
+                        if (PlanetReference.GetSizeOffset(currPlanet.worldSize,
+                                                         currPlanet.PlanetaryMoons[i].moonSize) == 2)
+                            mods = 2;
+                        if (PlanetReference.GetSizeOffset(currPlanet.worldSize,
+                                                         currPlanet.PlanetaryMoons[i].moonSize) == 1)
+                            mods = 4;
+                        do
+                        {
+                            temp = ourDice.rng(2, 6, mods);
+                        } while (currPlanet.CheckLunarOrbitalPresent(temp, 5));
+
+                        currPlanet.PlanetaryMoons[i].orbitalRadius = temp;
+                    }
+
+                    if (currPlanet.PlanetaryMoons[i].moon == MoonType.Moonlet)
+                        currPlanet.PlanetaryMoons[i].orbitalRadius = ourDice.rng(1, 6, 4) / 4;
+
+                }
             }
 
         }
@@ -1004,17 +1400,17 @@ namespace TwilightShards.GURPSUtil
             double pressureFactor = 0;
             if (currPlanet.worldSize == WorldSize.Small && currPlanet.biomeType == WorldType.Ice)
                 pressureFactor = 10;
-            else if (currPlanet.worldSize == WorldSize.Standard && (
+            if (currPlanet.worldSize == WorldSize.Standard && (
                 (currPlanet.biomeType == WorldType.Ice) || (currPlanet.biomeType == WorldType.Ocean) ||
                 (currPlanet.biomeType == WorldType.Ammonia) || (currPlanet.biomeType == WorldType.Garden)))
                 pressureFactor = 1;
-            else if (currPlanet.IsAGreenhousePlanet() && currPlanet.worldSize == WorldSize.Standard)
+            if (currPlanet.IsAGreenhousePlanet() && currPlanet.worldSize == WorldSize.Standard)
                 pressureFactor = 100;
-            else if (currPlanet.worldSize == WorldSize.Large && (
+            if (currPlanet.worldSize == WorldSize.Large && (
                 (currPlanet.biomeType == WorldType.Ice) || (currPlanet.biomeType == WorldType.Ocean) ||
                 (currPlanet.biomeType == WorldType.Ammonia) || (currPlanet.biomeType == WorldType.Garden)))
                 pressureFactor = 5;
-            else if (currPlanet.IsAGreenhousePlanet() && currPlanet.worldSize == WorldSize.Standard)
+            if (currPlanet.IsAGreenhousePlanet() && currPlanet.worldSize == WorldSize.Standard)
                 pressureFactor = 500;
 
             currPlanet.atmoPressure = currPlanet.atmoMass * currPlanet.worldGravity * pressureFactor;
@@ -1036,8 +1432,17 @@ namespace TwilightShards.GURPSUtil
         /// <param name="currPlanet">Current planet</param>
         public static void GenerateResourceValue(Dice ourDice, Planet currPlanet)
         {
-            //TODO: Give this a proper mod roll.
-            int roll = ourDice.gurpsRoll(0);
+            int mod = 0;
+            if (currPlanet.volcanicActivity == GeologicActivity.None)
+                mod = -2;
+            else if (currPlanet.volcanicActivity == GeologicActivity.Light)
+                mod = -1;
+            else if (currPlanet.volcanicActivity == GeologicActivity.Heavy)
+                mod = 1;
+            else if (currPlanet.volcanicActivity == GeologicActivity.Extreme)
+                mod = 2;
+
+            int roll = ourDice.gurpsRoll(mod);
             if (roll > 19) roll = 19;
             if (roll < 1) roll = 1;
 
@@ -1110,6 +1515,16 @@ namespace TwilightShards.GURPSUtil
                     }
                 }
             }
+
+            //Activity modifiers.
+            if (currPlanet.volcanicActivity == GeologicActivity.Heavy)
+                mod = mod - 1;
+            if (currPlanet.tectonicActivity == GeologicActivity.Heavy)
+                mod = mod - 1;
+            if (currPlanet.tectonicActivity == GeologicActivity.Extreme)
+                mod = mod - 2;
+            if (currPlanet.volcanicActivity == GeologicActivity.Extreme)
+                mod = mod - 2;
 
             if (mod <= -2) return -2;
             else if (mod >= 8) return 8;

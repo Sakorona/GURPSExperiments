@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace TwilightShards.GURPSUtil
 {
-    public enum WorldSize
+    public enum GeologicActivity
     {
         None,
-        Insignficant,
-        Tiny,
-        Small,
-        Standard,
-        Medium,
-        Large
+        Light,
+        Moderate,
+        Heavy,
+        Extreme
     }
 }

@@ -154,6 +154,7 @@ namespace GenerateGURPSPlanet
 
                 //physical and dynamic properties
                 PlanetReference.GeneratePhysicalProperties(ourDice, currPlanet);
+                PlanetReference.GenerateAtmosphericPressure(currPlanet);
             }
 
             if (currPlanet.IsGasGiant())
@@ -161,9 +162,18 @@ namespace GenerateGURPSPlanet
                 PlanetReference.GenerateGasGiantProperties(ourDice, currPlanet);
             }
 
-            PlanetReference.GenerateDynamicParameters(ourDice, currPlanet, parentMass);
+            if (currPlanet.IsTerrestialPlanet() || currPlanet.IsGasGiant())
+            {
+                PlanetReference.GenerateDynamicParameters(ourDice, currPlanet, parentMass,genMoons, systemAge);
+                //if (genMoons) PlanetReference.PlaceMoons(ourDice, currPlanet);
+                //LATER EXPANSION DO MOONS PROPERLY. WE AREN'T HERE.
+                //SORRY.
+            }
+
+            //we're nearing the end, I think...
 
             //and now we format the output! :D :D :D 
+            txtResults.Text = currPlanet.DescribePlanet();
         }
     }
 }
