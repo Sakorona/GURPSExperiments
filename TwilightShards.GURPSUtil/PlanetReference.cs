@@ -1152,14 +1152,14 @@ namespace TwilightShards.GURPSUtil
             if ((currPlanet.planetType == PlanetType.GasGiantPlanet && currPlanet.worldSize == WorldSize.Small) ||
                (currPlanet.planetType == PlanetType.TerrestialPlanet && currPlanet.worldSize == WorldSize.Large))
                 roll = roll + 6;
-            
-            if (currPlanet.planetType == PlanetType.GasGiantPlanet && currPlanet.worldSize == WorldSize.Standard)
+
+            if (currPlanet.planetType == PlanetType.TerrestialPlanet && currPlanet.worldSize == WorldSize.Standard)
                 roll = roll + 10;
 
-            if (currPlanet.planetType == PlanetType.GasGiantPlanet && currPlanet.worldSize == WorldSize.Small)
+            if (currPlanet.planetType == PlanetType.TerrestialPlanet && currPlanet.worldSize == WorldSize.Small)
                 roll = roll + 14;
 
-            if (currPlanet.planetType == PlanetType.GasGiantPlanet && currPlanet.worldSize == WorldSize.Tiny)
+            if (currPlanet.planetType == PlanetType.TerrestialPlanet && currPlanet.worldSize == WorldSize.Tiny)
                 roll = roll + 18;
 
             if (roll > 36) slowRot = true;
