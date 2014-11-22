@@ -611,7 +611,16 @@ namespace TwilightShards.GURPSUtil
         public string DescribePlanet()
         {
             string desc = "";
-            desc = "Planet: " + this.worldSize + " (" + this.biomeType + ") orbits at ";
+            bool warning = true;
+
+            if (warning)
+            {
+                desc = desc + "Be advised that this does not calculate tidal locking, and a slightly lower (5) modifier for ";
+                desc = desc + " volcanic activity.";
+                desc = desc + Environment.NewLine;
+            }
+
+            desc = desc + "Planet: " + this.worldSize + " (" + this.biomeType + ") orbits at ";
             desc = desc + this.GetOrbitalDistanceToPrimary() + " AU. ";
             desc = desc + Environment.NewLine;
             desc = desc + "Blackbody Temperature: " + this.blackbodyTemp + " K" + Environment.NewLine;
@@ -621,6 +630,7 @@ namespace TwilightShards.GURPSUtil
             desc = desc + "Mass: " + Math.Round(this.worldMass, 2) + " earth masses. Density: " + Math.Round(this.worldDensity,2) * PlanetReference.EarthDensity + " g/cc ";
             desc = desc + "Gravity: " + Math.Round(this.worldGravity * PlanetReference.EarthGravity,2) + " m/s^2";
             desc = desc + Environment.NewLine;
+            desc = desc + "Volcanic Activity is " + this.volcanicActivity + " and tectonic activity is " + this.tectonicActivity + Environment.NewLine;
             
             //atmospheric properties
             desc = desc + "Atmospheric Pressure: " + Math.Round(this.atmoPressure,2) + " atm, with mass: " + Math.Round(this.atmoMass,2);
@@ -650,7 +660,10 @@ namespace TwilightShards.GURPSUtil
             //FINALLY, orbital characteristics.
             desc = desc + Environment.NewLine;
             desc = desc + "Orbital Characteristics" + Environment.NewLine;
-
+            if (IsTidalLocked)
+                desc = desc + "[This planet is tidally locked!]" + Environment.NewLine;
+            if (IsRetrograde)
+                desc = desc + "This planet orbits in a retrograde motion." + Environment.NewLine;
             if (eccentricity != 0)
             {
                 desc = desc + "Eccentricity: " + Math.Round(this.eccentricity,2) + " with Periastron of ";
